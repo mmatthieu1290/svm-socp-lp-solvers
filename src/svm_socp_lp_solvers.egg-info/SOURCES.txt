@@ -1,0 +1,11 @@
+README.md
+pyproject.toml
+src/svm_socp_lp_solvers/__init__.py
+src/svm_socp_lp_solvers/socp_lp.py
+src/svm_socp_lp_solvers/svm_lp.py
+src/svm_socp_lp_solvers/utils.py
+src/svm_socp_lp_solvers.egg-info/PKG-INFO
+src/svm_socp_lp_solvers.egg-info/SOURCES.txt
+src/svm_socp_lp_solvers.egg-info/dependency_links.txt
+src/svm_socp_lp_solvers.egg-info/requires.txt
+src/svm_socp_lp_solvers.egg-info/top_level.txt
