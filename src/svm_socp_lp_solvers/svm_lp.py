@@ -7,6 +7,81 @@ from sklearn.utils.validation import check_array
 from .utils import prediction_from_w_b,prediction_probas_from_w_b
 
 class SVM_Lp(BaseEstimator, ClassifierMixin):
+
+    r"""
+    Smoothed sparse Lp-SVM classifier.
+
+    This estimator solves the following optimization problem:
+
+    .. math::
+
+        \min_{w,b,\xi}\ \sum_{j=1}^d (|w_j|+\varepsilon)^p \;+\; C\sum_{i=1}^n \xi_i
+        \quad \text{s.t.}\quad
+        y_i (w^\top x_i + b) \ge 1 - \xi_i,\ \xi_i \ge 0,\ i=1,\dots,n.
+
+    The smoothing parameter :math:`\varepsilon>0` makes the objective locally
+    Lipschitz and avoids singular behavior at :math:`w_j=0`.
+
+    Parameters
+    ----------
+    p : float, default=0.5
+        Exponent controlling sparsity. Must satisfy 0 < p < 1.
+
+    C : float, default=1e4
+        Slack penalty parameter. Must be > 0.
+
+    epsilon : float, default=1e-5
+        Smoothing/approximation parameter :math:`\varepsilon>0` used in
+        :math:`(|w_j|+\varepsilon)^p`. Not a numerical tolerance.
+
+
+    Methods
+    -------
+    fit(X, y)
+        Fit the model on labeled data.
+
+    predict(X)
+        Predict class labels for samples in X.
+
+    predict_proba(X)
+        Estimate probability of the positive class.
+
+
+    Attributes
+    ----------
+    classes_ : ndarray of shape (n_classes,)
+        Unique class labels seen during fit.
+
+    coef_ : ndarray of shape (n_features,)
+        Estimated weight vector.
+
+    intercept_ : float
+        Estimated intercept.
+
+    n_iter_ : int
+        Number of iterations run.
+
+    fitted_ : bool
+        True after calling fit().
+
+    n_features_in_ : int
+        Number of detected features after calling fit()
+
+    feature_names_in_ : ndarray of shape (n_classes,)
+        Name of detected features after calling fit() if X is a DataFrame, else None
+
+    n_selected_features_ : int
+        Number of selected features after calling fit()
+
+    selected_feature_names_ : ndarray
+       Name of selected features after calling fit() if X is a DataFrame, else None               
+                 
+
+    Notes
+    -----
+    The problem is nonconvex given that p < 1; the solver may converge to a local
+    minimum depending on the parameters.
+    """
     
     def __init__(self,p=0.5,C=10**4,eps=10**(-5)):
         
@@ -61,6 +136,23 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
             
         
     def fit(self,X,y,tol = 10 ** (-5),iter_max = 100,w0 = None):
+
+        """
+        Fit the Lp-SVM model.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+        Training data.
+
+        y : array-like of shape (n_samples,)
+        Binary labels. Recommended: {-1, +1} or {0,+1}
+
+        Returns
+        -------
+        self : object
+        Fitted estimator.
+        """
 
         y = y.copy()
         X = X.copy()
@@ -159,7 +251,20 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         except TypeError:
             self.selected_feature_names_ = None    
         
-    def predict(self,X,threshold = 0.5):    
+    def predict(self,X,threshold = 0.5): 
+
+       """
+    Predict class labels for samples in X.
+
+    Parameters
+    ----------
+    X : array-like of shape (n_samples, n_features)
+
+    Returns
+    -------
+    y_pred : ndarray of shape (n_samples,)
+        Predicted labels in the same encoding as `classes_`.
+       """          
 
        X = X.copy() 
         
@@ -174,7 +279,19 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
        return predictions
     
     def predict_proba(self,X):
+       
+       """
+    Predict probabilities for samples in X to belong to positive class.
 
+    Parameters
+    ----------
+    X : array-like of shape (n_samples, n_features)
+
+    Returns
+    -------
+    y_proba : ndarray of shape (n_samples,2)
+        Predicted probabilites in the same encoding as `classes_`.
+       """  
        X = X.copy() 
 
        if self.fitted_ == False:
