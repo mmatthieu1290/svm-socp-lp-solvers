@@ -16,8 +16,8 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
     .. math::
 
         \min_{w,b,\xi}\ \sum_{j=1}^d (|w_j|+\varepsilon)^p \;+\; C\sum_{i=1}^n \xi_i
-        \quad \text{s.t.}\quad
-        y_i (w^\top x_i + b) \ge 1 - \xi_i,\ \xi_i \ge 0,\ i=1,\dots,n.
+        \quad \mathrm{s.t.}\quad
+        y_i (w^\top x_i + b) \geq 1 - \xi_i,\ \xi_i \ge 0,\ i=1,\dots,n.
 
     The smoothing parameter :math:`\varepsilon>0` makes the objective locally
     Lipschitz and avoids singular behavior at :math:`w_j=0`.
