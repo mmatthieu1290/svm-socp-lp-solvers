@@ -17,7 +17,26 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
 
         \min_{w,b,\xi}\ \sum_{j=1}^n (|w_j|+\varepsilon)^p \;+\; C\sum_{i=1}^2 \xi_i
         \quad \mathrm{s.t.}\quad
-        y_i (w^\top x_i + b) \geq 1 - \xi_i,\ \xi_i \geq 0,\ i=1,\dots,m.
+        \begin{aligned}
+			&({\bf w}, b, \xi) \in \mathbb{R}^{n+2} \\
+			&\text{s.t. } \ w^\top \mu_1 + b \geq 1 - \xi + \kappa(\alpha_1) \|S_1^\top w\|, \\
+			&\quad -(w^\top \mu_2 + b) \geq 1 - \xi + \kappa(\alpha_2) \|S_2^\top w\|, \\
+			&\quad \xi \geq 0
+		\end{aligned}
+
+    The vector :math:\mu_1 (resp. :math:\mu_2) is the mean value vector of features associated with positive (resp. negative) class.
+    The matrix :math:S_j\in\mathbb{R}^{n\times m_j}, with :math:j\in\{1,2\}, satisfy \sigma_j=S_jS_j^\top, where \sigma_1 (resp. \sigma_2) is the covariance matrix of features asociated with positive (resp. negative) class.   
+
+    The constraint set of the above optimization problem is obtained from the following constraint set thanks to the the multivariate Chebyshev inequality:
+
+    .. math::
+
+    \inf_{\widetilde{\bf x}_j\sim ({\bm\mu}_j,\Sigma_j)} \!\!\! \text{Pr}\{(-1)^{j+1}({\bf w}^{\top }\widetilde{\bf x}_{j}+b)\ge 0\} \geq \alpha_j, \ j=1,2, 
+
+    The notation :math:\widetilde{\bf x}_j\sim ({\bm\mu}_j,\Sigma_j)} means that the distributions :math:\widetilde{\bf x}_j have
+    associated means and covariance matrices :math:({\bm\mu}_j, \Sigma_j) for :math:j = 1, 2.
+
+    It is a robust version of SVM_Lp.
 
     The smoothing parameter :math:`\varepsilon>0` makes the objective locally
     Lipschitz and avoids singular behavior at :math:`w_j=0`.
@@ -30,6 +49,12 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
     C : float, default=1e4
         Slack penalty parameter. Must be > 0.
 
+    alpha_1 : float, default=0.5
+              Exponent controlling probability of good classification of positive class. Must satisfy 0 < alpha_1 < 1.
+
+    alpha_2 : float, default=0.5   
+              Exponent controlling probability of good classification of negative class. Must satisfy 0 < alpha_2 < 1.
+              
     epsilon : float, default=1e-5
         Smoothing/approximation parameter :math:`\varepsilon>0` used in
         :math:`(|w_j|+\varepsilon)^p`. Not a numerical tolerance.
