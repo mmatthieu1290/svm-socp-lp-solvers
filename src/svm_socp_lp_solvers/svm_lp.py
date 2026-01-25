@@ -243,7 +243,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         self.fitted_ = True
 
         mask_selected_features = np.abs(w_old) > 1e-5
-        self.n_selected_features_ = mask_selected_features.sum()
+        self.n_selected_features_ = int(mask_selected_features.sum())
 
         try: 
             self.feature_names_in_ = np.array(feature_names)
