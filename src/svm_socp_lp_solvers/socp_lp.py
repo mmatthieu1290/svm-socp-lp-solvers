@@ -57,7 +57,10 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
               
     epsilon : float, default=1e-5
         Smoothing/approximation parameter :math:`\varepsilon>0` used in
-        :math:`(|w_j|+\varepsilon)^p`. Not a numerical tolerance.
+        :math:`(|w_j|+\varepsilon)^p`.
+
+    tol : float, default=1e-4
+         Tolerance for stopping criteria.               
 
 
     Methods
@@ -108,7 +111,7 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
     minimum depending on the parameters.
     """
     
-    def __init__(self,p=0.5,C=10**4,alpha_1=0.5,alpha_2=0.5,eps=10**(-5)):
+    def __init__(self,p=0.5,C=10**4,alpha_1=0.5,alpha_2=0.5,eps=10**(-5),tol = 1e-4,max_iter = 100):
         
         self.fitted_ = False
         self._p = None
@@ -120,7 +123,11 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         self._alpha_2 = None 
         self.alpha_2 = alpha_2   
         self._eps = None
-        self.eps = eps      
+        self.eps = eps
+        self._tol = None
+        self.tol = tol
+        self._max_iter = None
+        self.max_iter = max_iter              
         
         self.kappa1 = np.sqrt(alpha_1 / (1-alpha_1))
         self.kappa2 = np.sqrt(alpha_2 / (1-alpha_2))
@@ -144,6 +151,15 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
     @property
     def eps(self):
         return self._eps
+    
+    @property
+    def tol(self):
+        return self._tol
+
+
+    @property
+    def max_iter(self):
+        return self._max_iter      
 
     @p.setter
     def p(self,value):
@@ -190,10 +206,28 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         elif (value<=0):
             raise ValueError("eps must be a positive number")
         else:
-            self._eps = value    
+            self._eps = value  
+
+    @tol.setter
+    def tol(self,value):
+        if not isinstance(value, float) and not isinstance(value,int):
+            raise TypeError("tol must be a float number or an integer number.")
+        elif (value<=0):
+            raise ValueError("tol must be a positive number")
+        else:
+            self._tol = value              
+            
+    @max_iter.setter
+    def max_iter(self,value):
+        if not isinstance(value,int):
+            raise TypeError("max_iter must be an integer number.")
+        elif (value<=0):
+            raise ValueError("max_iter must be positive")
+        else:
+            self._max_iter = value               
             
         
-    def fit(self,X,y,tol = 10 ** (-5),iter_max = 100,w0 = None):
+    def fit(self,X,y,w0 = None):
 
         """
         Fit the Lp-SVM model.
@@ -253,7 +287,6 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         self.classes_ = np.unique(y)
         y[y<=0] = -1
 
-        m = X.shape[0]
         n = X.shape[1]
 
         self.n_features_in_ = n
@@ -279,7 +312,7 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         xi_old = np.random.rand(2)
 
         phi_k_abs = np.ones(n)
-        err = 2 * tol
+        err = 2 * self.tol
         iter_ = 0
         # ========= Variables =========
         w  = cp.Variable(n)
@@ -292,7 +325,7 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         constr2 = self.kappa2 * cp.norm(S2.T @ w, 2) <= -(w @ mu2 + b) - 1 + xi[1]
         constraints = [constr1, constr2]   # (xi ≥ 0 ya está en la definición de la variable)  
             
-        while (err > tol and iter_ < iter_max):    
+        while (err > self.tol and iter_ < self.max_iter):    
             
            weighted_abs = cp.multiply(phi_k_abs, w) 
            obj = cp.Minimize(cp.norm1(weighted_abs) + self.C * cp.sum(xi)) 
