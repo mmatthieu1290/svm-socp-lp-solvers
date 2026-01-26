@@ -83,7 +83,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
     minimum depending on the parameters.
     """
     
-    def __init__(self,p=0.5,C=10**4,eps=10**(-5)):
+    def __init__(self,p=0.5,C=10**4,eps=10**(-5),tol=1e-4,max_iter=100):
         
         self.fitted_ = False
         self._p = None
@@ -91,7 +91,11 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         self._C = None
         self.C = C 
         self._eps = None
-        self.eps = eps       
+        self.eps = eps
+        self._tol = None
+        self.tol = tol
+        self._max_iter = None
+        self.max_iter = max_iter      
     
 
     @property
@@ -106,6 +110,14 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
     @property
     def eps(self):
         return self._eps
+    
+    @property
+    def tol(self):
+        return self._tol
+
+    @property
+    def max_iter(self):
+        return self._max_iter       
 
     @p.setter
     def p(self,value):
@@ -132,10 +144,28 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         elif (value<=0):
             raise ValueError("eps must be a positive number")
         else:
-            self._eps = value    
+            self._eps = value
+
+    @tol.setter
+    def tol(self,value):
+        if not isinstance(value, float) and not isinstance(value,int):
+            raise TypeError("tol must be a float number or an integer number.")
+        elif (value<=0):
+            raise ValueError("C must be a positive number")
+        else:
+            self._tol = value
+
+    @max_iter.setter
+    def max_iter(self,value):
+        if not isinstance(value,int):
+            raise TypeError("C must be a float number or an integer number.")
+        elif (value<=0):
+            raise ValueError("C must be a positive number")
+        else:
+            self._max_iter = value                            
             
         
-    def fit(self,X,y,tol = 10 ** (-5),iter_max = 100,w0 = None):
+    def fit(self,X,y):
 
         """
         Fit the Lp-SVM model.
@@ -200,16 +230,13 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
 
         self.n_features_in_ = n
         
-        if w0 == None:
-            w0 = np.random.randn(n)
-        
-        w_old = w0.copy()
+        w_old = np.random.randn(n)
         b_old = np.random.randn(1)
        
         xi_old = np.random.rand(X.shape[0])
 
         phi_k_abs = np.ones(n)
-        err = 2 * tol
+        err = 2 * self.tol
         iter_ = 0
         # ========= Variables =========
         w  = cp.Variable(n)
@@ -220,8 +247,10 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         for row, target,xi_i in zip(X,y,xi):
             constr = target @ (w @ row.reshape((-1,1)) + b) >=  1 - xi_i
             constraints.append(constr) 
+
+        self.n_non_zeros_coef_per_iteration_ = []    
             
-        while (err > tol and iter_ < iter_max):    
+        while (err > self.tol and iter_ < self.max_iter):    
             
            weighted_abs = cp.multiply(phi_k_abs, w) 
            obj = cp.Minimize(cp.norm1(weighted_abs) + self.C * cp.sum(xi)) 
@@ -234,13 +263,14 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
            xi_old = xi.value
            phi_k = self.p * (np.abs(w_old)+self.eps) ** (self.p-1)
            phi_k_abs = np.abs(phi_k)          
-                      
+           self.n_non_zeros_coef_per_iteration_.append(int((np.abs(w_old) > 1e-5).sum()))           
            iter_ += 1
             
         self.coef_ = w_old
         self.intercept_ = b_old
         self.xi = xi_old 
         self.fitted_ = True
+        self._n_iter_ = iter
 
         mask_selected_features = np.abs(w_old) > 1e-5
         self.n_selected_features_ = int(mask_selected_features.sum())
