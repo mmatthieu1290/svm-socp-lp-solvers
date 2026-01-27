@@ -32,8 +32,10 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
 
     epsilon : float, default=1e-5
         Smoothing/approximation parameter :math:`\varepsilon>0` used in
-        :math:`(|w_j|+\varepsilon)^p`. Not a numerical tolerance.
-
+        :math:`(|w_j|+\varepsilon)^p`. 
+        
+    tol : float, default=1e-4
+        Tolerance for stopping criteria.
 
     Methods
     -------
@@ -74,7 +76,10 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         Number of selected features after calling fit()
 
     selected_feature_names_ : ndarray
-       Name of selected features seen during :term:`fit`. Defined only when `X` has feature names that are all strings.          
+       Name of selected features seen during :term:`fit`. Defined only when `X` has feature names that are all strings. 
+
+    n_non_zeros_coef_per_iteration_ : ndarray
+       Number of nonzeros componentes of coef_ at each step from step 1.
                  
 
     Notes
@@ -271,6 +276,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         self.xi = xi_old 
         self.fitted_ = True
         self.n_iter_ = iter_
+        self.n_non_zeros_coef_per_iteration_ = np.array(self.n_non_zeros_coef_per_iteration_)
 
         mask_selected_features = np.abs(w_old) > 1e-5
         self.n_selected_features_ = int(mask_selected_features.sum())
