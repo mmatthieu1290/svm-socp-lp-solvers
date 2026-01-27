@@ -122,44 +122,16 @@ This project requires the following dependencies:
 
 ### Installation
 
-Build svm-socp-lp-solvers from the source and install dependencies:
-
-1. **Clone the repository:**
+1. **Install the library:**
 
     ```sh
-    ❯ git clone https://github.com/mmatthieu1290/svm-socp-lp-solvers
+    ❯ pip install git+https://github.com/mmatthieu1290/svm-socp-lp-solvers.git
     ```
-
-2. **Navigate to the project directory:**
+2. **Import the solvers:**
 
     ```sh
-    ❯ cd svm-socp-lp-solvers
+    ❯ from svm_socp_lp_solvers import SVM_Lp,SOCP_Lp
     ```
-
-3. **Install the dependencies:**
-
-**Using [conda](https://docs.conda.io/):**
-
-```sh
-❯ conda env create -f conda.yml
-```
-
-### Usage
-
-Run the project with:
-
-**Using [conda](https://docs.conda.io/):**
-
-```sh
-conda activate {venv}
-python {entrypoint}
-```
-
-### Testing
-
-Svm-socp-lp-solvers uses the {__test_framework__} test framework. Run the test suite with:
-
-**Using [conda](https://docs.conda.io/):**
 
 ```sh
 conda activate {venv}
@@ -171,6 +143,7 @@ pytest
 <div align="left"><a href="#top">⬆ Return</a></div>
 
 ---
+
 
 
 
