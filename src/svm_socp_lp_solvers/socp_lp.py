@@ -144,6 +144,16 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
     @property
     def eps(self):
         return self._eps
+    
+    @property
+    def tol(self):
+        return self._tol
+
+    @property
+    def max_iter(self):
+        return self._max_iter    
+    
+    
 
     @p.setter
     def p(self,value):
@@ -190,10 +200,28 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         elif (value<=0):
             raise ValueError("eps must be a positive number")
         else:
-            self._eps = value    
+            self._eps = value
+
+    @tol.setter
+    def tol(self,value):
+        if not isinstance(value, float) and not isinstance(value,int):
+            raise TypeError("tol must be a float number or an integer number.")
+        elif (value<=0):
+            raise ValueError("C must be a positive number")
+        else:
+            self._tol = value
+
+    @max_iter.setter
+    def max_iter(self,value):
+        if not isinstance(value,int):
+            raise TypeError("C must be a float number or an integer number.")
+        elif (value<=0):
+            raise ValueError("C must be a positive number")
+        else:
+            self._max_iter = value                    
             
         
-    def fit(self,X,y,tol = 10 ** (-5),iter_max = 100,w0 = None):
+    def fit(self,X,y):
 
         """
         Fit the Lp-SVM model.
@@ -270,16 +298,14 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         S1 = (1 / np.sqrt(m_pos)) * (A_pos.T - mu1 @ np.ones((1,m_pos)))
         S2 = (1 / np.sqrt(m_neg)) * (A_neg.T - mu2 @ np.ones((1,m_neg)))
         
-        if w0 == None:
-            w0 = np.random.randn(n)
         
-        w_old = w0.copy()
+        w_old = np.random.randn(n)
         b_old = np.random.randn(1)
         
         xi_old = np.random.rand(2)
 
         phi_k_abs = np.ones(n)
-        err = 2 * tol
+        err = 2 * self.tol
         iter_ = 0
         # ========= Variables =========
         w  = cp.Variable(n)
@@ -290,9 +316,11 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         constr1 = self.kappa1 * cp.norm(S1.T @ w, 2) <= w @ mu1 + b - 1 + xi[0]
         # −(w^T μ2 + b) ≥ 1 − xi_2 + κ2 ||S2^T w||
         constr2 = self.kappa2 * cp.norm(S2.T @ w, 2) <= -(w @ mu2 + b) - 1 + xi[1]
-        constraints = [constr1, constr2]   # (xi ≥ 0 ya está en la definición de la variable)  
+        constraints = [constr1, constr2]   # (xi ≥ 0 ya está en la definición de la variable) 
+
+        self.n_non_zeros_coef_per_iteration_ = []    
             
-        while (err > tol and iter_ < iter_max):    
+        while (err > self.tol and iter_ < self.iter_max):    
             
            weighted_abs = cp.multiply(phi_k_abs, w) 
            obj = cp.Minimize(cp.norm1(weighted_abs) + self.C * cp.sum(xi)) 
@@ -305,14 +333,15 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
            xi_old = xi.value
            phi_k = self.p * (np.abs(w_old)+self.eps) ** (self.p-1)
            phi_k_abs = np.abs(phi_k)          
-                      
+           self.n_non_zeros_coef_per_iteration_.append(int((np.abs(w_old) > 1e-5).sum()))             
            iter_ += 1
             
         self.coef_ = w_old
         self.intercept_ = b_old
         self.xi = xi_old 
         self.fitted_ = True
-
+        self.n_iter_ = iter_
+        
         mask_selected_features = np.abs(w_old) > 1e-5
         self.n_selected_features_ = int(mask_selected_features.sum())
 

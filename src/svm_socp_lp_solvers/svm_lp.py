@@ -270,7 +270,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         self.intercept_ = b_old
         self.xi = xi_old 
         self.fitted_ = True
-        self._n_iter_ = iter
+        self.n_iter_ = iter_
 
         mask_selected_features = np.abs(w_old) > 1e-5
         self.n_selected_features_ = int(mask_selected_features.sum())
