@@ -125,11 +125,12 @@ This project requires the following dependencies:
 1. **Install the library:**
 
     ```sh
-    ❯ pip install git+https://github.com/mmatthieu1290/svm-socp-lp-solvers.git
+    pip install git+https://github.com/mmatthieu1290/svm-socp-lp-solvers.git
     ```
 2. **Import the solvers:**
 
     ```sh
-    ❯ from svm_socp_lp_solvers import SVM_Lp,SOCP_Lp
+    from svm_socp_lp_solvers import SVM_Lp,SOCP_Lp
     ```
+
 
