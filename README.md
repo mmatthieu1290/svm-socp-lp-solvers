@@ -71,6 +71,46 @@ $$
 The smoothing parameter $\varepsilon>0$ makes the objective locally
 Lipschitz and avoids singular behavior at $w_j=0$.
 
+### SOCP_Lp
+
+This estimator solves the following optimization problem:
+
+$$
+\min_{w,b,\xi}\ \sum_{j=1}^n (|w_j|+\varepsilon)^p + C \sum_{i=1}^2 \xi_i
+\quad \mathrm{s.t.}\quad
+\begin{aligned}
+& (w,b,\xi) \in \mathbb{R}^{n+2} \\
+& w^\top \mu_1 + b \ge 1 - \xi + \kappa(\alpha_1)\,\|S_1^\top w\|, \\
+& -(w^\top \mu_2 + b) \ge 1 - \xi + \kappa(\alpha_2)\,\|S_2^\top w\|, \\
+& \xi \ge 0.
+\end{aligned}
+$$
+
+The vector $\mu_1$ (resp. $\mu_2$) is the mean feature vector associated with the
+positive (resp. negative) class.
+
+The matrix $S_j \in \mathbb{R}^{n \times m_j}$, with $j \in \{1,2\}$, satisfies
+$\Sigma_j = S_j S_j^\top$, where $\Sigma_1$ (resp. $\Sigma_2$) is the covariance
+matrix of the features associated with the positive (resp. negative) class.
+
+The constraint set above is a reformulation of the following probabilistic
+constraint using the multivariate Chebyshev inequality:
+
+$$
+\inf_{\tilde{x}_j \sim (\mu_j,\Sigma_j)}
+\Pr\left\{ (-1)^{j+1}(w^\top \tilde{x}_j + b) \ge 0 \right\}
+\ge \alpha_j, \quad j = 1,2.
+$$
+
+The notation $\tilde{x}_j \sim (\mu_j,\Sigma_j)$ indicates that the random vectors
+$\tilde{x}_j$ have mean $\mu_j$ and covariance matrix $\Sigma_j$.
+
+This model can be interpreted as a robust version of \texttt{SVM\_Lp}.
+
+The smoothing parameter $\varepsilon > 0$ makes the objective locally Lipschitz
+and avoids singular behavior at $w_j = 0$.
+
+
 ## Getting Started
 
 ### Prerequisites
@@ -131,3 +171,4 @@ pytest
 <div align="left"><a href="#top">⬆ Return</a></div>
 
 ---
+
