@@ -216,7 +216,7 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         if not isinstance(value, float) and not isinstance(value,int):
             raise TypeError("tol must be a float number or an integer number.")
         elif (value<=0):
-            raise ValueError("C must be a positive number")
+            raise ValueError("tol must be a positive number")
         else:
             self._tol = value
 
@@ -225,7 +225,7 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         if not isinstance(value,int):
             raise TypeError("C must be a float number or an integer number.")
         elif (value<=0):
-            raise ValueError("C must be a positive number")
+            raise ValueError("max_iter must be a positive integer")
         else:
             self._max_iter = value                    
             
