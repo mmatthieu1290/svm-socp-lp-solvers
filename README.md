@@ -133,17 +133,3 @@ This project requires the following dependencies:
     ❯ from svm_socp_lp_solvers import SVM_Lp,SOCP_Lp
     ```
 
-```sh
-conda activate {venv}
-pytest
-```
-
----
-
-<div align="left"><a href="#top">⬆ Return</a></div>
-
----
-
-
-
-
