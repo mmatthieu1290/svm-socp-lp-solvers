@@ -223,7 +223,7 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
     @max_iter.setter
     def max_iter(self,value):
         if not isinstance(value,int):
-            raise TypeError("C must be a float number or an integer number.")
+            raise TypeError("max_iter must be an integer number.")
         elif (value<=0):
             raise ValueError("max_iter must be a positive integer")
         else:
