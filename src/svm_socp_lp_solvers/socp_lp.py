@@ -176,7 +176,7 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
     @C.setter
     def C(self,value):
         if not isinstance(value, float) and not isinstance(value,int):
-            raise TypeError("C must be a float number or an integer number.")
+            raise TypeError("C must be a float number.")
         elif (value<=0):
             raise ValueError("C must be a positive number")
         else:
