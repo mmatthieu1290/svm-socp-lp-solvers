@@ -324,7 +324,7 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
 
         self.n_non_zeros_coef_per_iteration_ = []    
             
-        while (err > self.tol and iter_ < self.iter_max):    
+        while (err > self.tol and iter_ < self.max_iter):    
             
            weighted_abs = cp.multiply(phi_k_abs, w) 
            obj = cp.Minimize(cp.norm1(weighted_abs) + self.C * cp.sum(xi)) 
