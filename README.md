@@ -1,0 +1,133 @@
+<div id="top">
+
+<!-- HEADER STYLE: CLASSIC -->
+<div align="center">
+
+
+# SVM-SOCP-LP-SOLVERS
+
+<em>Empowering Smarter Decisions Through Advanced Optimization</em>
+
+<!-- BADGES -->
+<img src="https://img.shields.io/github/last-commit/mmatthieu1290/svm-socp-lp-solvers?style=flat&logo=git&logoColor=white&color=0080ff" alt="last-commit">
+<img src="https://img.shields.io/github/languages/top/mmatthieu1290/svm-socp-lp-solvers?style=flat&color=0080ff" alt="repo-top-language">
+<img src="https://img.shields.io/github/languages/count/mmatthieu1290/svm-socp-lp-solvers?style=flat&color=0080ff" alt="repo-language-count">
+
+<em>Built with the tools and technologies:</em>
+
+<img src="https://img.shields.io/badge/Markdown-000000.svg?style=flat&logo=Markdown&logoColor=white" alt="Markdown">
+<img src="https://img.shields.io/badge/TOML-9C4121.svg?style=flat&logo=TOML&logoColor=white" alt="TOML">
+<img src="https://img.shields.io/badge/scikitlearn-F7931E.svg?style=flat&logo=scikit-learn&logoColor=white" alt="scikitlearn">
+<img src="https://img.shields.io/badge/NumPy-013243.svg?style=flat&logo=NumPy&logoColor=white" alt="NumPy">
+<img src="https://img.shields.io/badge/Python-3776AB.svg?style=flat&logo=Python&logoColor=white" alt="Python">
+
+</div>
+<br>
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Mathematical Model](#mathematical-model)
+- [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+    - [Usage](#usage)
+    - [Testing](#testing)
+
+---
+
+## Overview
+
+svm-socp-lp-solvers is a Python package that provides advanced solvers for Support Vector Machine (SVM) optimization problems using Second-Order Cone Programming (SOCP) and Linear Programming (LP). Designed for high-dimensional and large-scale data, it enables efficient, robust, and interpretable machine learning models.
+
+**Authors:** Miguel Carrasco, Julio Lopez, Matthieu Marechal
+
+**Why svm-socp-lp-solvers?**
+
+This project aims to simplify and accelerate the development of SVM-based solutions with cutting-edge convex optimization techniques. The core features include:
+
+- 🧩 **🔧 Modular Architecture:** Seamlessly integrates with existing ML workflows and scales across modules.
+- 🚀 **⚙️ High-Performance Solvers:** Efficiently handles large-scale SOCP and LP problems for support vector machines.
+- 📊 **📈 Utility Functions:** Provides tools for model inference, including predictions and probability estimates.
+- 🧮 **🔍 Focused on Convex Optimization:** Leverages cvxpy and other libraries for robust, reliable solutions.
+- 🧠 **🤖 Support for Sparse, Robust Models:** Facilitates feature selection and high-dimensional data handling.
+
+---
+
+## Mathematical model 
+
+### SVM_Lp
+
+ This estimator solves the following optimization problem:
+
+$$
+\min_{w,b,\xi}\ \sum_{j=1}^n (|w_j|+\varepsilon)^p + C\sum_{i=1}^m \xi_i
+\quad \mathrm{s.t.}\quad
+y_i (w^\top x_i + b) \ge 1 - \xi_i,\ \xi_i \ge 0,\ i=1,\dots,m.
+$$
+
+The smoothing parameter $\varepsilon>0$ makes the objective locally
+Lipschitz and avoids singular behavior at $w_j=0$.
+
+## Getting Started
+
+### Prerequisites
+
+This project requires the following dependencies:
+
+- **Programming Language:** Python
+- **Package Manager:** Conda
+
+### Installation
+
+Build svm-socp-lp-solvers from the source and install dependencies:
+
+1. **Clone the repository:**
+
+    ```sh
+    ❯ git clone https://github.com/mmatthieu1290/svm-socp-lp-solvers
+    ```
+
+2. **Navigate to the project directory:**
+
+    ```sh
+    ❯ cd svm-socp-lp-solvers
+    ```
+
+3. **Install the dependencies:**
+
+**Using [conda](https://docs.conda.io/):**
+
+```sh
+❯ conda env create -f conda.yml
+```
+
+### Usage
+
+Run the project with:
+
+**Using [conda](https://docs.conda.io/):**
+
+```sh
+conda activate {venv}
+python {entrypoint}
+```
+
+### Testing
+
+Svm-socp-lp-solvers uses the {__test_framework__} test framework. Run the test suite with:
+
+**Using [conda](https://docs.conda.io/):**
+
+```sh
+conda activate {venv}
+pytest
+```
+
+---
+
+<div align="left"><a href="#top">⬆ Return</a></div>
+
+---
