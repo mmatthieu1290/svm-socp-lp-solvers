@@ -98,7 +98,7 @@ constraint using the multivariate Chebyshev inequality:
 
 $$
 \inf_{\tilde{x}_j \sim (\mu_j,\Sigma_j)}
-\Pr\left\{ (-1)^{j+1}(w^\top \tilde{x}_j + b) \ge 0 \right\}
+\Pr\left\( (-1)^{j+1}(w^\top \tilde{x}_j + b) \ge 0 \right\)
 \ge \alpha_j, \quad j = 1,2.
 $$
 
@@ -171,4 +171,5 @@ pytest
 <div align="left"><a href="#top">⬆ Return</a></div>
 
 ---
+
 
