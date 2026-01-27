@@ -108,7 +108,7 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
     minimum depending on the parameters.
     """
     
-    def __init__(self,p=0.5,C=10**4,alpha_1=0.5,alpha_2=0.5,eps=10**(-5)):
+    def __init__(self,p=0.5,C=10**4,alpha_1=0.5,alpha_2=0.5,eps=10**(-5),tol = 1e-4,max_iter = 100):
         
         self.fitted_ = False
         self._p = None
@@ -120,7 +120,11 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         self._alpha_2 = None 
         self.alpha_2 = alpha_2   
         self._eps = None
-        self.eps = eps      
+        self.eps = eps
+        self._tol = None
+        self.tol = tol
+        self._max_iter = None
+        self.max_iter = max_iter      
         
         self.kappa1 = np.sqrt(alpha_1 / (1-alpha_1))
         self.kappa2 = np.sqrt(alpha_2 / (1-alpha_2))
@@ -341,7 +345,7 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         self.xi = xi_old 
         self.fitted_ = True
         self.n_iter_ = iter_
-        
+
         mask_selected_features = np.abs(w_old) > 1e-5
         self.n_selected_features_ = int(mask_selected_features.sum())
 
