@@ -263,7 +263,7 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         
         X = check_array(X,force_all_finite=True)
 
-        _ =  check_array(X,force_all_finite=True,ensure_2d=False)
+        _ =  check_array(y,force_all_finite=True,ensure_2d=False)
         if isinstance(y,np.ndarray) == False:
             y = np.array(y)
             
