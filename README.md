@@ -105,7 +105,7 @@ $$
 The notation $\tilde{x}_j \sim (\mu_j,\Sigma_j)$ indicates that the random vectors
 $\tilde{x}_j$ have mean $\mu_j$ and covariance matrix $\Sigma_j$.
 
-This model can be interpreted as a robust version of \texttt{SVM\_Lp}.
+This model can be interpreted as a robust version of SVM_Lp.
 
 The smoothing parameter $\varepsilon > 0$ makes the objective locally Lipschitz
 and avoids singular behavior at $w_j = 0$.
@@ -171,5 +171,6 @@ pytest
 <div align="left"><a href="#top">⬆ Return</a></div>
 
 ---
+
 
 
