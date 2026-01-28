@@ -113,7 +113,7 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
     minimum depending on the parameters.
     """
     
-    def __init__(self,p=0.5,C=10**4,alpha_1=0.5,alpha_2=0.5,eps=10**(-5),tol = 1e-4,max_iter = 100):
+    def __init__(self,p=0.5,C=10**4,alpha_1=0.5,alpha_2=0.5,eps=1e-5,tol = 1e-4,max_iter = 100):
         
         self.fitted_ = False
         self._p = None
