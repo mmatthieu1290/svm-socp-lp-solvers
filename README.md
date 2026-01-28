@@ -80,8 +80,8 @@ $$
 \quad \mathrm{s.t.}\quad
 \begin{aligned}
 & (w,b,\xi) \in \mathbb{R}^{n+2} \\
-& w^\top \mu_1 + b \ge 1 - \xi + \kappa(\alpha_1)\,\|S_1^\top w\|, \\
-& -(w^\top \mu_2 + b) \ge 1 - \xi + \kappa(\alpha_2)\,\|S_2^\top w\|, \\
+& w^\top \mu_1 + b \ge 1 - \xi + \kappa(\alpha_1)\|S_1^\top w\|, \\
+& -(w^\top \mu_2 + b) \ge 1 - \xi + \kappa(\alpha_2)\|S_2^\top w\|, \\
 & \xi \ge 0.
 \end{aligned}
 $$
@@ -132,5 +132,6 @@ This project requires the following dependencies:
     ```sh
     from svm_socp_lp_solvers import SVM_Lp,SOCP_Lp
     ```
+
 
 
