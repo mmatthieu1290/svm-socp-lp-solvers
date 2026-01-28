@@ -86,7 +86,7 @@ $$
 \end{aligned}
 $$
 
-The vector $\mu_1$ (resp. $\mu_2$) is the mean feature vector associated with the
+where $\kappa(\alpha_i)=\sqrt{\frac{\alpha_i}{1-\alpha_i}}$. The vector $\mu_1$ (resp. $\mu_2$) is the mean feature vector associated with the
 positive (resp. negative) class.
 
 The matrix $S_j \in \mathbb{R}^{n \times m_j}$, with $j \in \{1,2\}$, satisfies
@@ -132,6 +132,7 @@ This project requires the following dependencies:
     ```sh
     from svm_socp_lp_solvers import SVM_Lp,SOCP_Lp
     ```
+
 
 
 
