@@ -69,7 +69,7 @@ y_i (w^\top x_i + b) \ge 1 - \xi_i,\ \xi_i \ge 0,\ i=1,\dots,m.
 $$
 
 The smoothing parameter $\varepsilon>0$ makes the objective locally
-Lipschitz and avoids singular behavior at $w_j=0$.
+Lipschitz and avoids singular behavior at $w_j=0$. The vector $x_i$ contains the features of $i$-th observation and $y_i=\pm1$ is its class.  
 
 ### SOCP_Lp
 
@@ -132,6 +132,7 @@ This project requires the following dependencies:
     ```sh
     from svm_socp_lp_solvers import SVM_Lp,SOCP_Lp
     ```
+
 
 
 
