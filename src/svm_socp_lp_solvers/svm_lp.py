@@ -88,7 +88,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
     minimum depending on the parameters.
     """
     
-    def __init__(self,p=0.5,C=10**4,eps=10**(-5),tol=1e-4,max_iter=100):
+    def __init__(self,p=0.5,C=10**4,eps=1e-5,tol=1e-4,max_iter=100):
         
         self.fitted_ = False
         self._p = None
