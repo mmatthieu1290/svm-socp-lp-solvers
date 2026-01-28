@@ -136,7 +136,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
     @C.setter
     def C(self,value):
         if not isinstance(value, float) and not isinstance(value,int):
-            raise TypeError("C must be a float number or an integer number.")
+            raise TypeError("C must be a float number.")
         elif (value<=0):
             raise ValueError("C must be a positive number")
         else:
@@ -145,7 +145,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
     @eps.setter
     def eps(self,value):
         if not isinstance(value, float) and not isinstance(value,int):
-            raise TypeError("eps must be a float number or an integer number.")
+            raise TypeError("eps must be a float number.")
         elif (value<=0):
             raise ValueError("eps must be a positive number")
         else:
@@ -154,18 +154,18 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
     @tol.setter
     def tol(self,value):
         if not isinstance(value, float) and not isinstance(value,int):
-            raise TypeError("tol must be a float number or an integer number.")
+            raise TypeError("tol must be a float number.")
         elif (value<=0):
-            raise ValueError("C must be a positive number")
+            raise ValueError("tol must be a positive number")
         else:
             self._tol = value
 
     @max_iter.setter
     def max_iter(self,value):
         if not isinstance(value,int):
-            raise TypeError("C must be a float number or an integer number.")
+            raise TypeError("max_iter must be a float number.")
         elif (value<=0):
-            raise ValueError("C must be a positive number")
+            raise ValueError("max_iter must be a positive number")
         else:
             self._max_iter = value                            
             
@@ -203,7 +203,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         
         X = check_array(X,force_all_finite=True)
 
-        _ =  check_array(X,force_all_finite=True,ensure_2d=False)
+        _ =  check_array(y,force_all_finite=True,ensure_2d=False)
         if isinstance(y,np.ndarray) == False:
             y = np.array(y)
             
