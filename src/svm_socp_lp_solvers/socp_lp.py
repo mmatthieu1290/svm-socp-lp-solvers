@@ -358,12 +358,12 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         try: 
             self.feature_names_in_ = np.array(feature_names)
         except NameError:
-            self.feature_names_in_ = None
+            _ = 0
 
         try: 
             self.selected_feature_names_ = self.feature_names_in_[mask_selected_features]
-        except TypeError:
-            self.selected_feature_names_ = None  
+        except AttributeError:
+            _ = 0 
         
 
     
