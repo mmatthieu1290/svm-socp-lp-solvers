@@ -14,7 +14,6 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
     This estimator solves the following optimization problem:
 
     .. math::
-
         \min_{w,b,\xi}\ \sum_{j=1}^n (|w_j|+\varepsilon)^p \;+\; C\sum_{i=1}^2 \xi_i
         \quad \mathrm{s.t.}\quad
         \begin{aligned}
