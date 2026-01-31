@@ -23,7 +23,7 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
 			&\quad \xi \geq 0
 		\end{aligned}
 
-    The vector :math:\mu_1 (resp. :math:\mu_2) is the mean value vector of features associated with positive (resp. negative) class.
+    The vector .. math:\mu_1 (resp. :math:\mu_2) is the mean value vector of features associated with positive (resp. negative) class.
     The matrix :math:S_j\in\mathbb{R}^{n\times m_j}, with :math:j\in\{1,2\}, satisfy \sigma_j=S_jS_j^\top, where \sigma_1 (resp. \sigma_2) is the covariance matrix of features asociated with positive (resp. negative) class.   
 
     The constraint set of the above optimization problem is obtained from the following constraint set thanks to the the multivariate Chebyshev inequality:
