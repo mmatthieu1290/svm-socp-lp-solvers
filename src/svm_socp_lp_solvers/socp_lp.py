@@ -8,7 +8,7 @@ from .utils import prediction_from_w_b,prediction_probas_from_w_b
 
 class SOCP_Lp(BaseEstimator, ClassifierMixin):
 
-    """
+    r"""
     Smoothed sparse Lp-SOCP classifier.
 
     This estimator solves the following optimization problem:
