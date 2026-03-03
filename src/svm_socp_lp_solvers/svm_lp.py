@@ -32,11 +32,18 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
 
     epsilon : float, default=1e-5
         Smoothing/approximation parameter :math:`\varepsilon>0` used in
+<<<<<<< HEAD
         :math:`(|w_j|+\varepsilon)^p`.
 
     tol : float, default=1e-4
          Tolerance for stopping criteria.         
 
+=======
+        :math:`(|w_j|+\varepsilon)^p`. 
+        
+    tol : float, default=1e-4
+        Tolerance for stopping criteria.
+>>>>>>> eb9c878987849090d753dd90082f2f1a6cadb237
 
     Methods
     -------
@@ -77,7 +84,10 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         Number of selected features after calling fit()
 
     selected_feature_names_ : ndarray
-       Name of selected features seen during :term:`fit`. Defined only when `X` has feature names that are all strings.          
+       Name of selected features seen during :term:`fit`. Defined only when `X` has feature names that are all strings. 
+
+    n_non_zeros_coef_per_iteration_ : ndarray
+       Number of nonzeros componentes of coef_ at each step from step 1.
                  
 
     Notes
@@ -86,7 +96,11 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
     minimum depending on the parameters.
     """
     
+<<<<<<< HEAD
     def __init__(self,p=0.5,C=10**4,eps=10**(-5),tol = 1e-4,max_iter = 100):
+=======
+    def __init__(self,p=0.5,C=10**4,eps=1e-5,tol=1e-4,max_iter=100):
+>>>>>>> eb9c878987849090d753dd90082f2f1a6cadb237
         
         self.fitted_ = False
         self._p = None
@@ -94,12 +108,20 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         self._C = None
         self.C = C 
         self._eps = None
+<<<<<<< HEAD
         self.eps = eps 
         self._tol = None
         self.tol = tol
         self._max_iter = None
         self.max_iter = max_iter
 
+=======
+        self.eps = eps
+        self._tol = None
+        self.tol = tol
+        self._max_iter = None
+        self.max_iter = max_iter      
+>>>>>>> eb9c878987849090d753dd90082f2f1a6cadb237
     
 
     @property
@@ -115,15 +137,24 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
     def eps(self):
         return self._eps
     
+<<<<<<< HEAD
 
+=======
+>>>>>>> eb9c878987849090d753dd90082f2f1a6cadb237
     @property
     def tol(self):
         return self._tol
 
+<<<<<<< HEAD
 
     @property
     def max_iter(self):
         return self._max_iter        
+=======
+    @property
+    def max_iter(self):
+        return self._max_iter       
+>>>>>>> eb9c878987849090d753dd90082f2f1a6cadb237
 
     @p.setter
     def p(self,value):
@@ -137,7 +168,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
     @C.setter
     def C(self,value):
         if not isinstance(value, float) and not isinstance(value,int):
-            raise TypeError("C must be a float number or an integer number.")
+            raise TypeError("C must be a float number.")
         elif (value<=0):
             raise ValueError("C must be a positive number")
         else:
@@ -146,20 +177,41 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
     @eps.setter
     def eps(self,value):
         if not isinstance(value, float) and not isinstance(value,int):
-            raise TypeError("eps must be a float number or an integer number.")
+            raise TypeError("eps must be a float number.")
         elif (value<=0):
             raise ValueError("eps must be a positive number")
         else:
+<<<<<<< HEAD
             self._eps = value  
+=======
+            self._eps = value
+>>>>>>> eb9c878987849090d753dd90082f2f1a6cadb237
 
     @tol.setter
     def tol(self,value):
         if not isinstance(value, float) and not isinstance(value,int):
+<<<<<<< HEAD
             raise TypeError("tol must be a float number or an integer number.")
         elif (value<=0):
             raise ValueError("tol must be a positive number")
         else:
             self._tol = value              
+=======
+            raise TypeError("tol must be a float number.")
+        elif (value<=0):
+            raise ValueError("tol must be a positive number")
+        else:
+            self._tol = value
+
+    @max_iter.setter
+    def max_iter(self,value):
+        if not isinstance(value,int):
+            raise TypeError("max_iter must be a float number.")
+        elif (value<=0):
+            raise ValueError("max_iter must be a positive number")
+        else:
+            self._max_iter = value                            
+>>>>>>> eb9c878987849090d753dd90082f2f1a6cadb237
             
     @max_iter.setter
     def max_iter(self,value):
@@ -170,7 +222,11 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         else:
             self._max_iter = value               
         
+<<<<<<< HEAD
     def fit(self,X,y,w0 = None):
+=======
+    def fit(self,X,y):
+>>>>>>> eb9c878987849090d753dd90082f2f1a6cadb237
 
         """
         Fit the Lp-SVM model.
@@ -203,7 +259,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         
         X = check_array(X,force_all_finite=True)
 
-        _ =  check_array(X,force_all_finite=True,ensure_2d=False)
+        _ =  check_array(y,force_all_finite=True,ensure_2d=False)
         if isinstance(y,np.ndarray) == False:
             y = np.array(y)
             
@@ -235,10 +291,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
 
         self.n_features_in_ = n
         
-        if w0 == None:
-            w0 = np.random.randn(n)
-        
-        w_old = w0.copy()
+        w_old = np.random.randn(n)
         b_old = np.random.randn(1)
        
         xi_old = np.random.rand(X.shape[0])
@@ -256,7 +309,11 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
             constr = target @ (w @ row.reshape((-1,1)) + b) >=  1 - xi_i
             constraints.append(constr) 
 
+<<<<<<< HEAD
         self.n_non_zeros_coefs_by_iteration_ = []    
+=======
+        self.n_non_zeros_coef_per_iteration_ = []    
+>>>>>>> eb9c878987849090d753dd90082f2f1a6cadb237
             
         while (err > self.tol and iter_ < self.max_iter):    
             
@@ -271,14 +328,23 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
            xi_old = xi.value
            phi_k = self.p * (np.abs(w_old)+self.eps) ** (self.p-1)
            phi_k_abs = np.abs(phi_k)          
+<<<<<<< HEAD
            self.n_non_zeros_coefs_by_iteration_.append(int((np.abs(w_old) > 1e-5).sum()))           
+=======
+           self.n_non_zeros_coef_per_iteration_.append(int((np.abs(w_old) > 1e-5).sum()))           
+>>>>>>> eb9c878987849090d753dd90082f2f1a6cadb237
            iter_ += 1
             
         self.coef_ = w_old
         self.intercept_ = b_old
         self.xi = xi_old 
         self.fitted_ = True
+<<<<<<< HEAD
         self.n_iter_ = iter_ 
+=======
+        self.n_iter_ = iter_
+        self.n_non_zeros_coef_per_iteration_ = np.array(self.n_non_zeros_coef_per_iteration_)
+>>>>>>> eb9c878987849090d753dd90082f2f1a6cadb237
 
         mask_selected_features = np.abs(w_old) > 1e-5
         self.n_selected_features_ = int(mask_selected_features.sum())
@@ -286,12 +352,12 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         try: 
             self.feature_names_in_ = np.array(feature_names)
         except NameError:
-            self.feature_names_in_ = None
+            _ = 0
 
         try: 
             self.selected_feature_names_ = self.feature_names_in_[mask_selected_features]
-        except TypeError:
-            self.selected_feature_names_ = None    
+        except AttributeError:
+            _ = 0
         
     def predict(self,X,threshold = 0.5): 
 
