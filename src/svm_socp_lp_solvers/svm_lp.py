@@ -255,6 +255,8 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         for row, target,xi_i in zip(X,y,xi):
             constr = target @ (w @ row.reshape((-1,1)) + b) >=  1 - xi_i
             constraints.append(constr) 
+
+        self.n_non_zeros_coefs_by_iteration_ = []    
             
         while (err > self.tol and iter_ < self.max_iter):    
             
@@ -269,13 +271,14 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
            xi_old = xi.value
            phi_k = self.p * (np.abs(w_old)+self.eps) ** (self.p-1)
            phi_k_abs = np.abs(phi_k)          
-                      
+           self.n_non_zeros_coefs_by_iteration_.append(int((np.abs(w_old) > 1e-5).sum()))           
            iter_ += 1
             
         self.coef_ = w_old
         self.intercept_ = b_old
         self.xi = xi_old 
         self.fitted_ = True
+        self.n_iter_ = iter_ 
 
         mask_selected_features = np.abs(w_old) > 1e-5
         self.n_selected_features_ = int(mask_selected_features.sum())
