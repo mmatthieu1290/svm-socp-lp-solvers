@@ -115,11 +115,8 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
     minimum depending on the parameters.
     """
     
-<<<<<<< HEAD
-    def __init__(self,p=0.5,C=10**4,alpha_1=0.5,alpha_2=0.5,eps=10**(-5),tol = 1e-4,max_iter = 100):
-=======
-    def __init__(self,p=0.5,C=10**4,alpha_1=0.5,alpha_2=0.5,eps=1e-5,tol = 1e-4,max_iter = 100):
->>>>>>> eb9c878987849090d753dd90082f2f1a6cadb237
+
+    def __init__(self,p=0.5,C=1e4,alpha_1=0.5,alpha_2=0.5,eps=1e-5,tol = 1e-4,max_iter = 100):
         
         self.fitted_ = False
         self._p = None
@@ -135,11 +132,8 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         self._tol = None
         self.tol = tol
         self._max_iter = None
-<<<<<<< HEAD
         self.max_iter = max_iter              
-=======
         self.max_iter = max_iter      
->>>>>>> eb9c878987849090d753dd90082f2f1a6cadb237
         
         self.kappa1 = np.sqrt(alpha_1 / (1-alpha_1))
         self.kappa2 = np.sqrt(alpha_2 / (1-alpha_2))
@@ -168,18 +162,15 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
     def tol(self):
         return self._tol
 
-<<<<<<< HEAD
 
     @property
     def max_iter(self):
         return self._max_iter      
-=======
+
     @property
     def max_iter(self):
         return self._max_iter    
     
-    
->>>>>>> eb9c878987849090d753dd90082f2f1a6cadb237
 
     @p.setter
     def p(self,value):
@@ -226,11 +217,8 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         elif (value<=0):
             raise ValueError("eps must be a positive number")
         else:
-<<<<<<< HEAD
             self._eps = value  
-=======
-            self._eps = value
->>>>>>> eb9c878987849090d753dd90082f2f1a6cadb237
+
 
     @tol.setter
     def tol(self,value):
@@ -239,33 +227,21 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         elif (value<=0):
             raise ValueError("tol must be a positive number")
         else:
-<<<<<<< HEAD
             self._tol = value              
-            
-=======
-            self._tol = value
 
->>>>>>> eb9c878987849090d753dd90082f2f1a6cadb237
     @max_iter.setter
     def max_iter(self,value):
         if not isinstance(value,int):
             raise TypeError("max_iter must be an integer number.")
         elif (value<=0):
-<<<<<<< HEAD
             raise ValueError("max_iter must be positive")
         else:
             self._max_iter = value               
             
-        
-    def fit(self,X,y,w0 = None):
-=======
-            raise ValueError("max_iter must be a positive integer")
-        else:
-            self._max_iter = value                    
+                         
             
         
     def fit(self,X,y):
->>>>>>> eb9c878987849090d753dd90082f2f1a6cadb237
 
         """
         Fit the Lp-SVM model.
