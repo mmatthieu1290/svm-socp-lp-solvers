@@ -97,7 +97,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
     """
     
 
-    def __init__(self,p=0.5,C=10**4,eps=1e-5,tol=1e-4,max_iter=100):
+    def __init__(self,p=0.5,C=1e4,eps=1e-5,tol=1e-4,max_iter=100):
 
         
         self.fitted_ = False
@@ -305,7 +305,12 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
            obj = cp.Minimize(cp.norm1(weighted_abs) + self.C * cp.sum(xi)) 
            # ========= Resolver =========
            prob = cp.Problem(obj, constraints)
-           prob.solve(solver=cp.ECOS,verbose=True)   
+           try:
+              prob.solve(solver=cp.ECOS,verbose=True)   
+           except SolverError:
+              obj = cp.Minimize(cp.norm1(weighted_abs)+0.001* cp.norm2(w)**2 \
+                                + self.C * cp.sum(xi))    
+              prob.solve(solver=cp.ECOS,verbose=True)
            err = npl.norm(w.value - w_old) + npl.norm(b.value - b_old) + npl.norm(xi.value - xi_old)
            w_old = w.value
            b_old = b.value
