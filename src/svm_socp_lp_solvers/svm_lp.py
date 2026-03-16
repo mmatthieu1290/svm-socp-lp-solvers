@@ -1,6 +1,7 @@
 import numpy as np
 import numpy.linalg as npl
 import cvxpy as cp
+from cvxpy.error import SolverError
 from sklearn.exceptions import NotFittedError
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.validation import check_array
