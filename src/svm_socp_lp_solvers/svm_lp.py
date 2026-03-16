@@ -311,6 +311,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
            except SolverError:
               obj = cp.Minimize(cp.norm1(weighted_abs)+0.001* cp.norm2(w)**2 \
                                 + self.C * cp.sum(xi))    
+              prob = cp.Problem(obj, constraints)
               prob.solve(solver=cp.ECOS,verbose=True)
            err = npl.norm(w.value - w_old) + npl.norm(b.value - b_old) + npl.norm(xi.value - xi_old)
            w_old = w.value
