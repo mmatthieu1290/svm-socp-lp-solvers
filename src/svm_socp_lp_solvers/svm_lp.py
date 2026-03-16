@@ -43,7 +43,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         
     tol : float, default=1e-4
         Tolerance for stopping criteria.
->>>>>>> eb9c878987849090d753dd90082f2f1a6cadb237
+
 
     Methods
     -------
@@ -305,7 +305,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
            obj = cp.Minimize(cp.norm1(weighted_abs) + self.C * cp.sum(xi)) 
            # ========= Resolver =========
            prob = cp.Problem(obj, constraints)
-           prob.solve(solver=cp.ECOS)   
+           prob.solve(solver=cp.OSQP)   
            err = npl.norm(w.value - w_old) + npl.norm(b.value - b_old) + npl.norm(xi.value - xi_old)
            w_old = w.value
            b_old = b.value
