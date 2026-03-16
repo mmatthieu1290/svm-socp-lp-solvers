@@ -305,7 +305,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
            obj = cp.Minimize(cp.norm1(weighted_abs) + self.C * cp.sum(xi)) 
            # ========= Resolver =========
            prob = cp.Problem(obj, constraints)
-           prob.solve(solver=cp.OSQP)   
+           prob.solve(solver=cp.OSQP,verbose=True)   
            err = npl.norm(w.value - w_old) + npl.norm(b.value - b_old) + npl.norm(xi.value - xi_old)
            w_old = w.value
            b_old = b.value
