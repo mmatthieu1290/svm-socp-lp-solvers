@@ -30,6 +30,7 @@
 
 - [Overview](#overview)
 - [Mathematical Model](#mathematical-model)
+- [Examples](#examples)
 - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
@@ -110,6 +111,39 @@ This model can be interpreted as a robust version of SVM_Lp.
 The smoothing parameter $\varepsilon > 0$ makes the objective locally Lipschitz
 and avoids singular behavior at $w_j = 0$.
 
+## Examples
+
+### SVM_Lp
+
+    from svm_socp_lp_solvers import SVM_Lp
+    import pandas as pd
+
+    url = "https://raw.githubusercontent.com/mmatthieu1290/svm-socp-lp-solvers/main/datos_Titanic.xlsx"
+    df = pd.read_excel(url, engine="openpyxl")
+    X = df.iloc[:,:-1]
+    y = df.iloc[:,-1]
+
+    svm = SVM_Lp(C = 1e7,eps = 1e-4,tol_select_features = 1e-3)
+    svm.fit(X,y)
+
+    print("Coefs : ",svm.coef_)
+    print("Selected features : ",svm.selected_feature_names_)
+
+### SOCP_Lp 
+
+    from svm_socp_lp_solvers import SOCP_Lp
+    import pandas as pd
+    
+    url = "https://raw.githubusercontent.com/mmatthieu1290/svm-socp-lp-solvers/main/datos_Titanic.xlsx"
+    df = pd.read_excel(url, engine="openpyxl")
+    X = df.iloc[:,:-1]
+    y = df.iloc[:,-1]
+
+    socp = SOCP_Lp(p=0.1,alpha_1=0.2,alpha_2=0.2)
+    socp.fit(X,y)
+
+    print("Coefs : ",socp.coef_)
+    print("Selected features : ",socp.selected_feature_names_)
 
 ## Getting Started
 
