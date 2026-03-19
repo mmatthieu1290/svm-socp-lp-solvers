@@ -304,7 +304,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
             constraints.append(constr) 
 
 
-        self.n_non_zeros_coefs_by_iteration_ = []    
+        self.n_non_zeros_coefs_per_iteration_ = []    
  
         while (err > self.tol and iter_ < self.max_iter):    
             
@@ -319,7 +319,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
            xi_old = xi.value
            phi_k = (np.abs(w_old)**2+self.eps) ** ((self.p-2)/4)        
 
-           self.n_non_zeros_coefs_by_iteration_.append(int((np.abs(w_old) > \
+           self.n_non_zeros_coefs_per_iteration_.append(int((np.abs(w_old) > \
                                                             self.tol_select_features).sum()))                    
 
            iter_ += 1
