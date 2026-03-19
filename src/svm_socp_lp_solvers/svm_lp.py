@@ -302,23 +302,16 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
             
         while (err > self.tol and iter_ < self.max_iter):    
             
-           weighted_abs = cp.multiply(phi_k_abs, w) 
-           obj = cp.Minimize(cp.norm1(weighted_abs) + self.C * cp.sum(xi)) 
+           weighted_abs = cp.multiply(phi_k, w) 
+           obj = cp.Minimize(cp.norm2(weighted_abs) + self.C * cp.sum(xi)) 
            # ========= Resolver =========
            prob = cp.Problem(obj, constraints)
-           try:
-              prob.solve(solver=cp.ECOS,verbose=True)   
-           except SolverError:
-              obj = cp.Minimize(cp.norm1(weighted_abs)+0.001* cp.norm2(w)**2 \
-                                + self.C * cp.sum(xi))    
-              prob = cp.Problem(obj, constraints)
-              prob.solve(solver=cp.ECOS,verbose=True)
+           prob.solve(solver=cp.ECOS,verbose=True)   
            err = npl.norm(w.value - w_old) + npl.norm(b.value - b_old) + npl.norm(xi.value - xi_old)
            w_old = w.value
            b_old = b.value
            xi_old = xi.value
-           phi_k = self.p * (np.abs(w_old)+self.eps) ** (self.p-1)
-           phi_k_abs = np.abs(phi_k)          
+           phi_k = (np.abs(w_old)**2+self.eps) ** ((self.p-2)/4)        
 
            self.n_non_zeros_coefs_by_iteration_.append(int((np.abs(w_old) > 1e-5).sum()))           
 
