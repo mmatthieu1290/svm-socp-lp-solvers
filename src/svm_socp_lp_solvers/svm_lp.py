@@ -332,7 +332,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         self.n_iter_ = iter_ 
 
         self.n_iter_ = iter_
-        self.n_non_zeros_coef_per_iteration_ = np.array(self.n_non_zeros_coef_per_iteration_)
+        self.n_non_zeros_coefs_per_iteration_ = np.array(self.n_non_zeros_coefs_per_iteration_)
 
 
         mask_selected_features = np.abs(w_old) > self.tol_select_features
