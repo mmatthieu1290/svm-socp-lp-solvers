@@ -118,6 +118,24 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
     -----
     The problem is nonconvex given that p < 1; the solver may converge to a local
     minimum depending on the parameters.
+
+    Example 
+    -----
+
+    from svm_socp_lp_solvers import SOCP_Lp
+    import pandas as pd
+    
+    url = "https://raw.githubusercontent.com/mmatthieu1290/svm-socp-lp-solvers/main/datos_Titanic.xlsx"
+    df = pd.read_excel(url, engine="openpyxl")
+    X = df.iloc[:,:-1]
+    y = df.iloc[:,-1]
+
+    socp = SOCP_Lp(p=0.1,alpha_1=0.2,alpha_2=0.2)
+    socp.fit(X,y)
+
+    print("Coefs : ",socp.coef_)
+    print("Selected features : ",socp.selected_feature_names_)
+
     """
     
 

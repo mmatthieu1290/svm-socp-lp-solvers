@@ -96,7 +96,8 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
     The problem is nonconvex given that p < 1; the solver may converge to a local
     minimum depending on the parameters.
 
-    Example: 
+    Example 
+    -----
 
     from svm_socp_lp_solvers import SVM_Lp
     import pandas as pd
@@ -107,7 +108,6 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
     y = df.iloc[:,-1]
 
     svm = SVM_Lp(C = 1e7,eps = 1e-4,tol_select_features = 1e-3)
-
     svm.fit(X,y)
 
     print("Coefs : ",svm.coef_)
