@@ -220,7 +220,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
             self._tol_select_features = value 
             if hasattr(self,"coef_"):
 
-                mask_selected_features = np.abs(w_old) > self.tol_select_features
+                mask_selected_features = np.abs(self.coef_) > self.tol_select_features
                 self.n_selected_features_ = int(mask_selected_features.sum())
 
                 try: 
