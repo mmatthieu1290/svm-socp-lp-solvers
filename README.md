@@ -30,7 +30,7 @@
 
 - [Overview](#overview)
 - [Mathematical Model](#mathematical-model)
-- [Examples](#example)
+- [Examples](#examples)
 - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
