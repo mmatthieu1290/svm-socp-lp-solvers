@@ -303,7 +303,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         while (err > self.tol and iter_ < self.max_iter):    
             
            weighted_abs = cp.multiply(phi_k, w) 
-           obj = cp.Minimize(cp.norm2(weighted_abs) + self.C * cp.sum(xi)) 
+           obj = cp.Minimize(cp.norm2(weighted_abs)**2 + self.C * cp.sum(xi)) 
            # ========= Resolver =========
            prob = cp.Problem(obj, constraints)
            prob.solve(solver=cp.ECOS,verbose=True)   
