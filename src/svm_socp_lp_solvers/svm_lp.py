@@ -218,6 +218,16 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
             raise ValueError("tol_select_features must be a positive number")
         else:
             self._tol_select_features = value 
+            if hasattr(self,"coef_"):
+
+                mask_selected_features = np.abs(w_old) > self.tol_select_features
+                self.n_selected_features_ = int(mask_selected_features.sum())
+
+                try: 
+                   self.selected_feature_names_ = self.feature_names_in_[mask_selected_features]
+                except AttributeError:
+                   _ = 0
+               
 
     def fit(self,X,y):
 
