@@ -98,7 +98,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
     """
     
 
-    def __init__(self,p=0.5,C=1e4,eps=1e-5,tol=1e-4,max_iter=100):
+    def __init__(self,p=0.5,C=1e4,eps=1e-5,tol=1e-4,max_iter=100,tol_select_features = 1e-5):
 
         
         self.fitted_ = False
@@ -145,8 +145,8 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         return self._max_iter        
 
     @property
-    def max_iter(self):
-        return self._max_iter       
+    def tol_select_features(self):
+        return self._tol_select_features
 
 
     @p.setter
@@ -208,7 +208,14 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         else:
             self._max_iter = value               
         
-
+    @tol_select_features.setter
+    def tol_select_features(self,value):
+        if not isinstance(value, float) and not isinstance(value,int):
+            raise TypeError("tol_select_features must be a float number or an integer number.")
+        elif (value<=0):
+            raise ValueError("tol_select_features must be a positive number")
+        else:
+            self._tol_select_features = value 
 
     def fit(self,X,y):
 
@@ -296,10 +303,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
 
 
         self.n_non_zeros_coefs_by_iteration_ = []    
-
-        self.n_non_zeros_coef_per_iteration_ = []    
-
-            
+ 
         while (err > self.tol and iter_ < self.max_iter):    
             
            weighted_abs = cp.multiply(phi_k, w) 
@@ -313,9 +317,8 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
            xi_old = xi.value
            phi_k = (np.abs(w_old)**2+self.eps) ** ((self.p-2)/4)        
 
-           self.n_non_zeros_coefs_by_iteration_.append(int((np.abs(w_old) > 1e-5).sum()))           
-
-           self.n_non_zeros_coef_per_iteration_.append(int((np.abs(w_old) > 1e-5).sum()))           
+           self.n_non_zeros_coefs_by_iteration_.append(int((np.abs(w_old) > \
+                                                            self.tol_select_features).sum()))                    
 
            iter_ += 1
             
@@ -330,7 +333,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         self.n_non_zeros_coef_per_iteration_ = np.array(self.n_non_zeros_coef_per_iteration_)
 
 
-        mask_selected_features = np.abs(w_old) > 1e-5
+        mask_selected_features = np.abs(w_old) > self.tol_select_features
         self.n_selected_features_ = int(mask_selected_features.sum())
 
         try: 
