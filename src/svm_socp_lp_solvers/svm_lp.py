@@ -102,7 +102,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
     import pandas as pd
 
     url = "https://raw.githubusercontent.com/mmatthieu1290/svm-socp-lp-solvers/main/datos_Titanic.xlsx"
-    df = pd.read_excel(url, engine="openpyxl",index_col = 0)
+    df = pd.read_excel(url, engine="openpyxl")
     X = df.iloc[:,:-1]
     y = df.iloc[:,-1]
 
@@ -334,7 +334,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         while (err > self.tol and iter_ < self.max_iter):    
             
            weighted_abs = cp.multiply(phi_k, w) 
-           obj = cp.Minimize(cp.norm1(weighted_abs) + self.C * cp.sum(xi)) 
+           obj = cp.Minimize(cp.norm2(weighted_abs)**2 + self.C * cp.sum(xi)) 
            # ========= Resolver =========
            prob = cp.Problem(obj, constraints)
            prob.solve()   
@@ -342,7 +342,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
            w_old = w.value
            b_old = b.value
            xi_old = xi.value
-           phi_k = self.p*(np.abs(w_old)+self.eps) ** (self.p-1)        
+           phi_k = np.sqrt(self.p/2)*(np.abs(w_old)**2+self.eps) ** ((self.p-2)/4)        
 
            self.n_non_zeros_coefs_per_iteration_.append(int((np.abs(w_old) > \
                                                             self.tol_select_features).sum()))                    
