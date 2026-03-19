@@ -59,10 +59,15 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         :math:`(|w_j|+\varepsilon)^p`.
 
     tol : float, default=1e-4
-         Tolerance for stopping criteria.               
+         Tolerance for stopping criteria.  
 
-    tol : float, default=1e-4
-        Tolerance for stopping criteria.
+    max_iter : int, default=100
+        Maximum iterations for converging
+
+    tol_select_features: float, default=1e-5
+        Minimum value for coeficients to select corresponding feature. 
+        Warning: if model has been fitted, changing value of tol_select_features changes the attributes
+        n_selected_features_ and selected_feature_names_.                       
 
     Methods
     -------
@@ -116,7 +121,7 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
     """
     
 
-    def __init__(self,p=0.5,C=1e4,alpha_1=0.5,alpha_2=0.5,eps=1e-5,tol = 1e-4,max_iter = 100):
+    def __init__(self,p=0.5,C=1e4,alpha_1=0.5,alpha_2=0.5,eps=1e-5,tol = 1e-4,max_iter = 100,tol_select_features = 1e-5):
         
         self.fitted_ = False
         self._p = None
@@ -133,7 +138,9 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         self.tol = tol
         self._max_iter = None
         self.max_iter = max_iter              
-        self.max_iter = max_iter      
+        self.max_iter = max_iter  
+        self._tol_select_features = None
+        self.tol_select_features = tol_select_features           
         
         self.kappa1 = np.sqrt(alpha_1 / (1-alpha_1))
         self.kappa2 = np.sqrt(alpha_2 / (1-alpha_2))
@@ -169,7 +176,11 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
 
     @property
     def max_iter(self):
-        return self._max_iter    
+        return self._max_iter
+
+    @property
+    def tol_select_features(self):
+        return self._tol_select_features        
     
 
     @p.setter
@@ -238,7 +249,23 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         else:
             self._max_iter = value               
             
-                         
+    @tol_select_features.setter
+    def tol_select_features(self,value):
+        if not isinstance(value, float) and not isinstance(value,int):
+            raise TypeError("tol_select_features must be a float number or an integer number.")
+        elif (value<=0):
+            raise ValueError("tol_select_features must be a positive number")
+        else:
+            self._tol_select_features = value 
+            if hasattr(self,"coef_"):
+
+                mask_selected_features = np.abs(self.coef_) > self.tol_select_features
+                self.n_selected_features_ = int(mask_selected_features.sum())
+
+                try: 
+                   self.selected_feature_names_ = self.feature_names_in_[mask_selected_features]
+                except AttributeError:
+                   _ = 0                     
             
         
     def fit(self,X,y):
@@ -352,7 +379,8 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
            xi_old = xi.value
            phi_k = self.p * (np.abs(w_old)+self.eps) ** (self.p-1)
            phi_k_abs = np.abs(phi_k)          
-           self.n_non_zeros_coef_per_iteration_.append(int((np.abs(w_old) > 1e-5).sum()))             
+           self.n_non_zeros_coef_per_iteration_.append(int((np.abs(w_old) > \
+                                                            self.tol_select_features).sum()))             
            iter_ += 1
             
         self.coef_ = w_old
@@ -362,7 +390,7 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         self.n_iter_ = iter_
         self.n_non_zeros_coef_per_iteration_ = np.array(self.n_non_zeros_coef_per_iteration_)		
 
-        mask_selected_features = np.abs(w_old) > 1e-5
+        mask_selected_features = np.abs(w_old) > self.tol_select_features
         self.n_selected_features_ = int(mask_selected_features.sum())
 
         try: 

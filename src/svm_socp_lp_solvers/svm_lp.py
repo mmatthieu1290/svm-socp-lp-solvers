@@ -110,7 +110,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
 
     svm.fit(X,y)
 
-    print("Coefs : ",svm.coefs_)
+    print("Coefs : ",svm.coef_)
     print("Selected features : ",svm.selected_feature_names_)
 
 
@@ -218,16 +218,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
             raise ValueError("max_iter must be a positive number")
         else:
             self._max_iter = value                            
-
             
-    @max_iter.setter
-    def max_iter(self,value):
-        if not isinstance(value,int):
-            raise TypeError("max_iter must be an integer number.")
-        elif (value<=0):
-            raise ValueError("max_iter must be positive")
-        else:
-            self._max_iter = value               
         
     @tol_select_features.setter
     def tol_select_features(self,value):
