@@ -31,19 +31,19 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
     C : float, default=1e4
         Slack penalty parameter. Must be > 0.
 
-    epsilon : float, default=1e-5
+    eps : float, default=1e-5
         Smoothing/approximation parameter :math:`\varepsilon>0` used in
-<<<<<<< HEAD
-        :math:`(|w_j|+\varepsilon)^p`.
 
     tol : float, default=1e-4
-         Tolerance for stopping criteria.         
-
-=======
-        :math:`(|w_j|+\varepsilon)^p`. 
+        Tolerance for stopping criteria.         
         
-    tol : float, default=1e-4
-        Tolerance for stopping criteria.
+    max_iter : int, default=100
+        Maximum iterations for converging
+
+    tol_select_features: float, default=1e-5
+        Minimum value for coeficients to select corresponding feature. 
+        Warning: if model has been fitted, changing value of tol_select_features changes the attributes
+        n_selected_features_ and selected_feature_names_.   
 
 
     Methods
@@ -95,6 +95,25 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
     -----
     The problem is nonconvex given that p < 1; the solver may converge to a local
     minimum depending on the parameters.
+
+    Example: 
+
+    from svm_socp_lp_solvers import SVM_Lp
+    import pandas as pd
+
+    url = "https://raw.githubusercontent.com/mmatthieu1290/svm-socp-lp-solvers/main/datos_Titanic.xlsx"
+    df = pd.read_excel(url, engine="openpyxl",index_col = 0)
+    X = df.iloc[:,:-1]
+    y = df.iloc[:,-1]
+
+    svm = SVM_Lp(C = 1e7,eps = 1e-4,tol_select_features = 1e-3)
+
+    svm.fit(X,y)
+
+    print("Coefs : ",svm.coefs_)
+    print("Selected features : ",svm.selected_feature_names_)
+
+
     """
     
 
@@ -241,11 +260,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         Training data.
 
         y : array-like of shape (n_samples,)
-        Binary labels. Recommended: {-1, +1} or {0,+1}
-
-        tol : float, default=1e-5
-
-        iter_max : int, default=100
+        Binary labels. Must be {-1, +1} or {0,+1}
 
         Returns
         -------
@@ -319,7 +334,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         while (err > self.tol and iter_ < self.max_iter):    
             
            weighted_abs = cp.multiply(phi_k, w) 
-           obj = cp.Minimize(cp.norm2(weighted_abs)**2 + self.C * cp.sum(xi)) 
+           obj = cp.Minimize(cp.norm1(weighted_abs) + self.C * cp.sum(xi)) 
            # ========= Resolver =========
            prob = cp.Problem(obj, constraints)
            prob.solve()   
@@ -327,7 +342,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
            w_old = w.value
            b_old = b.value
            xi_old = xi.value
-           phi_k = (np.abs(w_old)**2+self.eps) ** ((self.p-2)/4)        
+           phi_k = self.p*(np.abs(w_old)+self.eps) ** (self.p-1)        
 
            self.n_non_zeros_coefs_per_iteration_.append(int((np.abs(w_old) > \
                                                             self.tol_select_features).sum()))                    
