@@ -281,7 +281,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
        
         xi_old = np.random.rand(X.shape[0])
 
-        phi_k_abs = np.ones(n)
+        phi_k = np.ones(n)
         err = 2 * self.tol
         iter_ = 0
         # ========= Variables =========
