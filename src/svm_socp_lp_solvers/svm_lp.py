@@ -117,6 +117,8 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         self.tol = tol
         self._max_iter = None
         self.max_iter = max_iter      
+        self._tol_select_features = None
+        self.tol_select_features = tol_select_features
 
     
 
