@@ -139,7 +139,8 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
     """
     
 
-    def __init__(self,p=0.5,C=1e4,alpha_1=0.5,alpha_2=0.5,eps=1e-5,tol = 1e-4,max_iter = 100,tol_select_features = 1e-5):
+    def __init__(self,p=0.5,C=1e4,alpha_1=0.5,alpha_2=0.5,tau = None,eps=1e-5,\
+                 tol = 1e-3,max_iter = 100,tol_select_features = 1e-5):
         
         self.fitted_ = False
         self._p = None
@@ -149,19 +150,20 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         self._alpha_1 = None
         self.alpha_1 = alpha_1
         self._alpha_2 = None 
-        self.alpha_2 = alpha_2   
+        self.alpha_2 = alpha_2
+        self._tau = None
+        self.tau = tau   
         self._eps = None
         self.eps = eps
         self._tol = None
         self.tol = tol
         self._max_iter = None
         self.max_iter = max_iter              
-        self.max_iter = max_iter  
         self._tol_select_features = None
         self.tol_select_features = tol_select_features           
         
-        self.kappa1 = np.sqrt(alpha_1 / (1-alpha_1))
-        self.kappa2 = np.sqrt(alpha_2 / (1-alpha_2))
+#        self.kappa1 = np.sqrt(alpha_1 / (1-alpha_1))
+#        self.kappa2 = np.sqrt(alpha_2 / (1-alpha_2))
 
     @property
     def p(self):
@@ -178,6 +180,10 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
     @property 
     def alpha_2(self):
        return self._alpha_2    
+
+    @property 
+    def tau(self):
+       return self._tau        
     
     @property
     def eps(self):
@@ -187,14 +193,9 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
     def tol(self):
         return self._tol
 
-
     @property
     def max_iter(self):
         return self._max_iter      
-
-    @property
-    def max_iter(self):
-        return self._max_iter
 
     @property
     def tol_select_features(self):
@@ -239,6 +240,18 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
             self._alpha_2 = value  
             self.kappa2 = np.sqrt(value / (1-value))
 
+    @tau.setter
+    def tau(self,value):
+        if value:
+           if not isinstance(value, float) and not isinstance(value,int):
+             raise TypeError("tau must be a float number or be equal to None.")
+           elif (value<=0):
+             raise ValueError("tau must be >0 and <=1")
+           else:
+             self._tau = value  
+        else:
+            self._tau = None               
+
     @eps.setter
     def eps(self,value):
         if not isinstance(value, float) and not isinstance(value,int):
@@ -280,10 +293,8 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
                 mask_selected_features = np.abs(self.coef_) > self.tol_select_features
                 self.n_selected_features_ = int(mask_selected_features.sum())
 
-                try: 
-                   self.selected_feature_names_ = self.feature_names_in_[mask_selected_features]
-                except AttributeError:
-                   _ = 0                     
+                if hasattr(self,"feature_names_in_"):
+                   self.selected_feature_names_ = self.feature_names_in_[mask_selected_features]                  
             
         
     def fit(self,X,y):
@@ -312,14 +323,13 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         y = y.copy()
         X = X.copy()
 
-        try:
-            feature_names = X.columns.tolist()
-        except AttributeError:
-            _ = 0
-        
-        X = check_array(X,force_all_finite=True)
+        if hasattr(X,"columns"):
+            self.feature_names_in_  = X.columns.tolist()
 
-        _ =  check_array(y,force_all_finite=True,ensure_2d=False)
+        
+        X = check_array(X,ensure_all_finite=True)
+
+        _ =  check_array(y,ensure_all_finite=True,ensure_2d=False)
         if isinstance(y,np.ndarray) == False:
             y = np.array(y)
             
@@ -380,7 +390,12 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         constr1 = self.kappa1 * cp.norm(S1.T @ w, 2) <= w @ mu1 + b - 1 + xi[0]
         # −(w^T μ2 + b) ≥ 1 − xi_2 + κ2 ||S2^T w||
         constr2 = self.kappa2 * cp.norm(S2.T @ w, 2) <= -(w @ mu2 + b) - 1 + xi[1]
-        constraints = [constr1, constr2]   # (xi ≥ 0 ya está en la definición de la variable) 
+        if self.tau:
+           constr3 = w @ mu1 + b <= 1 + xi[0]/self.tau
+           constr4 = -self.tau *(w @ mu2 + b) <= self.tau+xi[1]
+           constraints = [constr1, constr2,constr3,constr4]   # (xi ≥ 0 ya está en la definición de la variable)
+        else:
+           constraints = [constr1, constr2]   # (xi ≥ 0 ya está en la definición de la variable)      
 
         self.n_non_zeros_coef_per_iteration_ = []    
             
@@ -410,16 +425,9 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
 
         mask_selected_features = np.abs(w_old) > self.tol_select_features
         self.n_selected_features_ = int(mask_selected_features.sum())
-
-        try: 
-            self.feature_names_in_ = np.array(feature_names)
-        except NameError:
-            _ = 0
-
-        try: 
+  
+        if hasattr(self,"feature_names_in_"):
             self.selected_feature_names_ = self.feature_names_in_[mask_selected_features]
-        except AttributeError:
-            _ = 0 
         
 
     
