@@ -30,12 +30,12 @@
 
 - [Overview](#overview)
 - [Mathematical Model](#mathematical-model)
-- [Examples](#examples)
 - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
     - [Usage](#usage)
     - [Testing](#testing)
+- [Examples](#examples)
 
 ---
 
@@ -111,6 +111,27 @@ This model can be interpreted as a robust version of SVM_Lp.
 The smoothing parameter $\varepsilon > 0$ makes the objective locally Lipschitz
 and avoids singular behavior at $w_j = 0$.
 
+## Getting Started
+
+### Prerequisites
+
+This project requires the following dependencies:
+
+- **Programming Language:** Python
+- **Package Manager:** Conda
+
+### Installation
+
+1. **Install the library:**
+
+    ```sh
+    pip install git+https://github.com/mmatthieu1290/svm-socp-lp-solvers.git
+    ```
+2. **Import the solvers:**
+
+    ```sh
+    from svm_socp_lp_solvers import SVM_Lp,SOCP_Lp
+    ```
 ## Examples
 
 ### SVM_Lp
@@ -144,29 +165,6 @@ and avoids singular behavior at $w_j = 0$.
 
     print("Coefs : ",socp.coef_)
     print("Selected features : ",socp.selected_feature_names_)
-
-## Getting Started
-
-### Prerequisites
-
-This project requires the following dependencies:
-
-- **Programming Language:** Python
-- **Package Manager:** Conda
-
-### Installation
-
-1. **Install the library:**
-
-    ```sh
-    pip install git+https://github.com/mmatthieu1290/svm-socp-lp-solvers.git
-    ```
-2. **Import the solvers:**
-
-    ```sh
-    from svm_socp_lp_solvers import SVM_Lp,SOCP_Lp
-    ```
-
 
 
 
