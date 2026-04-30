@@ -427,7 +427,7 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         self.n_selected_features_ = int(mask_selected_features.sum())
   
         if hasattr(self,"feature_names_in_"):
-            self.selected_feature_names_ = self.feature_names_in_[mask_selected_features]
+            self.selected_feature_names_ = np.array(self.feature_names_in_)[mask_selected_features]
         
 
     
