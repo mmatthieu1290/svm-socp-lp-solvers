@@ -7,7 +7,7 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.validation import check_array
 from .utils import prediction_from_w_b,prediction_probas_from_w_b
 
-class SVM_Lp(BaseEstimator, ClassifierMixin):
+class SVMLp(BaseEstimator, ClassifierMixin):
 
     r"""
     Smoothed sparse Lp-SVM classifier.
@@ -233,10 +233,8 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
                 mask_selected_features = np.abs(self.coef_) > self.tol_select_features
                 self.n_selected_features_ = int(mask_selected_features.sum())
 
-                try: 
+                if hasattr(self,"feature_names_in_"):
                    self.selected_feature_names_ = self.feature_names_in_[mask_selected_features]
-                except AttributeError:
-                   _ = 0
                
 
     def fit(self,X,y):
@@ -262,14 +260,12 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         y = y.copy()
         X = X.copy()
 
-        try:
-            feature_names = X.columns.tolist()
-        except AttributeError:
-            _ = 0
+        if hasattr(X,"columns"):
+            self.feature_names_in_ = X.columns.tolist()
         
-        X = check_array(X,force_all_finite=True)
+        X = check_array(X,ensure_all_finite=True)
 
-        _ =  check_array(y,force_all_finite=True,ensure_2d=False)
+        _ =  check_array(y,ensure_all_finite=True,ensure_2d=False)
         if isinstance(y,np.ndarray) == False:
             y = np.array(y)
             
@@ -302,9 +298,6 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         self.n_features_in_ = n
         
         w_old = np.random.randn(n)
-        b_old = np.random.randn(1)
-       
-        xi_old = np.random.rand(X.shape[0])
 
         phi_k = np.ones(n)
         err = 2 * self.tol
@@ -329,7 +322,7 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
            # ========= Resolver =========
            prob = cp.Problem(obj, constraints)
            prob.solve()   
-           err = npl.norm(w.value - w_old) + npl.norm(b.value - b_old) + npl.norm(xi.value - xi_old)
+           err = npl.norm(w.value - w_old,np.inf) 
            w_old = w.value
            b_old = b.value
            xi_old = xi.value
@@ -354,15 +347,9 @@ class SVM_Lp(BaseEstimator, ClassifierMixin):
         mask_selected_features = np.abs(w_old) > self.tol_select_features
         self.n_selected_features_ = int(mask_selected_features.sum())
 
-        try: 
-            self.feature_names_in_ = np.array(feature_names)
-        except NameError:
-            _ = 0
 
-        try: 
-            self.selected_feature_names_ = self.feature_names_in_[mask_selected_features]
-        except AttributeError:
-            _ = 0
+        if hasattr(self,"feature_names_in_"):
+            self.selected_feature_names_ = np.array(self.feature_names_in_)[mask_selected_features]
         
     def predict(self,X,threshold = 0.5): 
 

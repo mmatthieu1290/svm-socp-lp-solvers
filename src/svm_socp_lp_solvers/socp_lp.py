@@ -6,7 +6,7 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.validation import check_array
 from .utils import prediction_from_w_b,prediction_probas_from_w_b
 
-class SOCP_Lp(BaseEstimator, ClassifierMixin):
+class SOCPLp(BaseEstimator, ClassifierMixin):
 
     r"""
     Smoothed sparse Lp-SOCP classifier.

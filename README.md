@@ -130,13 +130,13 @@ This project requires the following dependencies:
 2. **Import the solvers:**
 
     ```sh
-    from svm_socp_lp_solvers import SVM_Lp,SOCP_Lp
+    from svm_socp_lp_solvers import SVMLp,SOCPLp
     ```
 ## Examples
 
 ### SVM_Lp
 
-    from svm_socp_lp_solvers import SVM_Lp
+    from svm_socp_lp_solvers import SVMLp
     import pandas as pd
 
     url = "https://raw.githubusercontent.com/mmatthieu1290/svm-socp-lp-solvers/main/datos_Titanic.xlsx"
@@ -152,7 +152,7 @@ This project requires the following dependencies:
 
 ### SOCP_Lp 
 
-    from svm_socp_lp_solvers import SOCP_Lp
+    from svm_socp_lp_solvers import SOCPLp
     import pandas as pd
     
     url = "https://raw.githubusercontent.com/mmatthieu1290/svm-socp-lp-solvers/main/datos_Titanic.xlsx"
