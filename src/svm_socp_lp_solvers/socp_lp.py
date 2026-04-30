@@ -310,10 +310,6 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         y : array-like of shape (n_samples,)
         Binary labels. Recommended: {-1, +1} or {0,+1}
 
-        tol : float, default=1e-5
-
-        iter_max : int, default=100
-
         Returns
         -------
         self : object
@@ -374,9 +370,6 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
         
         
         w_old = np.random.randn(n)
-        b_old = np.random.randn(1)
-        
-        xi_old = np.random.rand(2)
 
         phi_k_abs = np.ones(n)
         err = 2 * self.tol
@@ -406,7 +399,7 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
            # ========= Resolver =========
            prob = cp.Problem(obj, constraints)
            prob.solve(solver=cp.ECOS)   
-           err = npl.norm(w.value - w_old) + npl.norm(b.value - b_old) + npl.norm(xi.value - xi_old)
+           err = npl.norm(w.value - w_old,np.inf) 
            w_old = w.value
            b_old = b.value
            xi_old = xi.value
@@ -459,6 +452,20 @@ class SOCP_Lp(BaseEstimator, ClassifierMixin):
        return predictions
     
     def predict_proba(self,X):
+       
+       """
+       Predict probability for class labels for samples in X.
+
+       Parameters
+       ----------
+       X : array-like of shape (n_samples, n_features)
+
+       Returns
+       -------
+       y_pred_prob : ndarray of shape (n_samples,2)
+        The first column is the probability for each observation to belong to 
+        negative or zero class, the second column is the probability for each observation to belong to positive class.
+       """    
 
        X = X.copy() 
 
