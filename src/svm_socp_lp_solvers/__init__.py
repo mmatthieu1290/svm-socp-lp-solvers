@@ -1,4 +1,4 @@
-from .svm_lp import SVM_Lp
-from .socp_lp import SOCP_Lp
+from .svm_lp import SVMLp
+from .socp_lp import SOCPLp
 
-__all__ = ["SVM_Lp", "SOCP_Lp"]
+__all__ = ["SVMLp", "SOCPLp"]

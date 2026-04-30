@@ -59,7 +59,7 @@ This project aims to simplify and accelerate the development of SVM-based soluti
 
 ## Mathematical model 
 
-### SVM_Lp
+### SVMLp
 
  This estimator solves the following optimization problem:
 
@@ -72,7 +72,7 @@ $$
 The smoothing parameter $\varepsilon>0$ makes the objective locally
 Lipschitz and avoids singular behavior at $w_j=0$. The vector $x_i$ contains the features of $i$-th observation and $y_i=\pm1$ is its class.  
 
-### SOCP_Lp
+### SOCPLp
 
 This estimator solves the following optimization problem:
 
@@ -134,7 +134,7 @@ This project requires the following dependencies:
     ```
 ## Examples
 
-### SVM_Lp
+### SVMLp
 
     from svm_socp_lp_solvers import SVMLp
     import pandas as pd
@@ -150,7 +150,7 @@ This project requires the following dependencies:
     print("Coefs : ",svm.coef_)
     print("Selected features : ",svm.selected_feature_names_)
 
-### SOCP_Lp 
+### SOCPLp 
 
     from svm_socp_lp_solvers import SOCPLp
     import pandas as pd
@@ -160,7 +160,7 @@ This project requires the following dependencies:
     X = df.iloc[:,:-1]
     y = df.iloc[:,-1]
 
-    socp = SOCP_Lp(p=0.1,alpha_1=0.2,alpha_2=0.2)
+    socp = SOCPLp(p=0.1,alpha_1=0.2,alpha_2=0.2)
     socp.fit(X,y)
 
     print("Coefs : ",socp.coef_)

@@ -99,7 +99,7 @@ class SVMLp(BaseEstimator, ClassifierMixin):
     Example 
     -----
 
-    from svm_socp_lp_solvers import SVM_Lp
+    from svm_socp_lp_solvers import SVMLp
     import pandas as pd
 
     url = "https://raw.githubusercontent.com/mmatthieu1290/svm-socp-lp-solvers/main/datos_Titanic.xlsx"
@@ -107,7 +107,7 @@ class SVMLp(BaseEstimator, ClassifierMixin):
     X = df.iloc[:,:-1]
     y = df.iloc[:,-1]
 
-    svm = SVM_Lp(C = 1e7,eps = 1e-4,tol_select_features = 1e-3)
+    svm = SVMLp(C = 1e7,eps = 1e-4,tol_select_features = 1e-3)
     svm.fit(X,y)
 
     print("Coefs : ",svm.coef_)

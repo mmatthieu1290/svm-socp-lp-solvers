@@ -35,7 +35,7 @@ class SOCPLp(BaseEstimator, ClassifierMixin):
     The notation :math:\widetilde{\bf x}_j\sim ({\bm\mu}_j,\Sigma_j)} means that the distributions :math:\widetilde{\bf x}_j have
     associated means and covariance matrices :math:({\bm\mu}_j, \Sigma_j) for :math:j = 1, 2.
 
-    It is a robust version of SVM_Lp.
+    It is a robust version of SVMLp.
 
     The smoothing parameter :math:`\varepsilon>0` makes the objective locally
     Lipschitz and avoids singular behavior at :math:`w_j=0`.
@@ -122,7 +122,7 @@ class SOCPLp(BaseEstimator, ClassifierMixin):
     Example 
     -----
 
-    from svm_socp_lp_solvers import SOCP_Lp
+    from svm_socp_lp_solvers import SOCPLp
     import pandas as pd
     
     url = "https://raw.githubusercontent.com/mmatthieu1290/svm-socp-lp-solvers/main/datos_Titanic.xlsx"
@@ -130,7 +130,7 @@ class SOCPLp(BaseEstimator, ClassifierMixin):
     X = df.iloc[:,:-1]
     y = df.iloc[:,-1]
 
-    socp = SOCP_Lp(p=0.1,alpha_1=0.2,alpha_2=0.2)
+    socp = SOCPLp(p=0.1,alpha_1=0.2,alpha_2=0.2)
     socp.fit(X,y)
 
     print("Coefs : ",socp.coef_)
