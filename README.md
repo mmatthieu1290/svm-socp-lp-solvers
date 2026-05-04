@@ -144,7 +144,7 @@ This project requires the following dependencies:
     X = df.iloc[:,:-1]
     y = df.iloc[:,-1]
 
-    svm = SVM_Lp(C = 1e7,eps = 1e-4,tol_select_features = 1e-3)
+    svm = SVMLp(C = 1e7,eps = 1e-4,tol_select_features = 1e-3)
     svm.fit(X,y)
 
     print("Coefs : ",svm.coef_)
