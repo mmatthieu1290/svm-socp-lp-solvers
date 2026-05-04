@@ -139,7 +139,7 @@ This project requires the following dependencies:
     from svm_socp_lp_solvers import SVMLp
     import pandas as pd
 
-    url = "https://raw.githubusercontent.com/mmatthieu1290/svm-socp-lp-solvers/main/datos_Titanic.xlsx"
+    url = "https://raw.githubusercontent.com/mmatthieu1290/svm-socp-lp-solvers/main/Titanic.xlsx"
     df = pd.read_excel(url, engine="openpyxl")
     X = df.iloc[:,:-1]
     y = df.iloc[:,-1]
@@ -155,7 +155,7 @@ This project requires the following dependencies:
     from svm_socp_lp_solvers import SOCPLp
     import pandas as pd
     
-    url = "https://raw.githubusercontent.com/mmatthieu1290/svm-socp-lp-solvers/main/datos_Titanic.xlsx"
+    url = "https://raw.githubusercontent.com/mmatthieu1290/svm-socp-lp-solvers/main/Titanic.xlsx"
     df = pd.read_excel(url, engine="openpyxl")
     X = df.iloc[:,:-1]
     y = df.iloc[:,-1]
