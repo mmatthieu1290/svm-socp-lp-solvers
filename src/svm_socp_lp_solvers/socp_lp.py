@@ -95,9 +95,6 @@ class SOCPLp(BaseEstimator, ClassifierMixin):
     n_iter_ : int
         Number of iterations run.
 
-    fitted_ : bool
-        True after calling fit().
-
     n_features_in_ : int
         Number of detected features after calling fit()
 
@@ -142,7 +139,7 @@ class SOCPLp(BaseEstimator, ClassifierMixin):
     def __init__(self,p=0.5,C=1e4,alpha_1=0.5,alpha_2=0.5,tau = None,eps=1e-5,\
                  tol = 1e-3,max_iter = 100,tol_select_features = 1e-5):
         
-        self.fitted_ = False
+
         self._p = None
         self.p = p
         self._C = None
@@ -412,7 +409,6 @@ class SOCPLp(BaseEstimator, ClassifierMixin):
         self.coef_ = w_old
         self.intercept_ = b_old
         self.xi = xi_old 
-        self.fitted_ = True
         self.n_iter_ = iter_
         self.n_non_zeros_coef_per_iteration_ = np.array(self.n_non_zeros_coef_per_iteration_)		
 
@@ -441,7 +437,7 @@ class SOCPLp(BaseEstimator, ClassifierMixin):
 
        X = X.copy() 
         
-       if self.fitted_ == False:
+       if hasattr(self,"coef_") == False:
           error_msg =  "This instance of Lp_SVM instance is not fitted yet. "
           error_msg +=  "Call 'fit' with appropriate arguments before using this estimator."
           raise NotFittedError(error_msg)
@@ -469,7 +465,7 @@ class SOCPLp(BaseEstimator, ClassifierMixin):
 
        X = X.copy() 
 
-       if self.fitted_ == False:
+       if hasattr(self,"coef_")== False:
           error_msg =  "This instance of Lp_SVM instance is not fitted yet. "
           error_msg +=  "Call 'fit' with appropriate arguments before using this estimator."
           raise NotFittedError(error_msg) 
