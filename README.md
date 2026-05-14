@@ -6,20 +6,13 @@
 
 # SVM-SOCP-LP-SOLVERS
 
-<em>Empowering Smarter Decisions Through Advanced Optimization</em>
+<em>Sparse Lp-regularized SVM and distributionally robust SOCP classifiers in Python</em>
 
 <!-- BADGES -->
 <img src="https://img.shields.io/github/last-commit/mmatthieu1290/svm-socp-lp-solvers?style=flat&logo=git&logoColor=white&color=0080ff" alt="last-commit">
 <img src="https://img.shields.io/github/languages/top/mmatthieu1290/svm-socp-lp-solvers?style=flat&color=0080ff" alt="repo-top-language">
 <img src="https://img.shields.io/github/languages/count/mmatthieu1290/svm-socp-lp-solvers?style=flat&color=0080ff" alt="repo-language-count">
 
-<em>Built with the tools and technologies:</em>
-
-<img src="https://img.shields.io/badge/Markdown-000000.svg?style=flat&logo=Markdown&logoColor=white" alt="Markdown">
-<img src="https://img.shields.io/badge/TOML-9C4121.svg?style=flat&logo=TOML&logoColor=white" alt="TOML">
-<img src="https://img.shields.io/badge/scikitlearn-F7931E.svg?style=flat&logo=scikit-learn&logoColor=white" alt="scikitlearn">
-<img src="https://img.shields.io/badge/NumPy-013243.svg?style=flat&logo=NumPy&logoColor=white" alt="NumPy">
-<img src="https://img.shields.io/badge/Python-3776AB.svg?style=flat&logo=Python&logoColor=white" alt="Python">
 
 </div>
 <br>
