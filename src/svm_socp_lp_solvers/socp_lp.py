@@ -407,6 +407,7 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
         if hasattr(self,"feature_names_in_"):
             self.selected_feature_names_ = np.array(self.feature_names_in_)[mask_selected_features]
         
+        return self
 
     
     def predict(self,X,threshold = 0.5):    
