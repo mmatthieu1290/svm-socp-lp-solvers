@@ -1,13 +1,29 @@
 import numpy as np
 import numpy.linalg as npl
 import cvxpy as cp
-from sklearn.exceptions import NotFittedError
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.multiclass import check_classification_targets
 from sklearn.utils.validation import check_array, check_is_fitted
+from numbers import Real, Integral
+from sklearn.utils._param_validation import Interval
+from sklearn.utils import check_random_state
+from sklearn.utils.validation import check_is_fitted
 
 
 class SOCPLp(ClassifierMixin,BaseEstimator):
+
+    _parameter_constraints = {
+        "p": [Interval(Real, 0, 1, closed="neither")],
+        "C": [Interval(Real, 0, None, closed="neither")],
+        "alpha_1": [Interval(Real, 0, 1, closed="neither")],
+        "alpha_2": [Interval(Real, 0, 1, closed="neither")],
+        "tau": [Interval(Real, 0, None, closed="neither"), None],
+        "eps": [Interval(Real, 0, None, closed="neither")],
+        "tol": [Interval(Real, 0, None, closed="neither")],
+        "max_iter": [Interval(Integral, 1, None, closed="left")],
+        "tol_select_features": [Interval(Real, 0, None, closed="neither")],
+        "random_state": ["random_state"],
+    }
 
     r"""
     Smoothed sparse Lp-SOCP classifier.
@@ -137,159 +153,19 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
     """
     
 
-    def __init__(self,p=0.5,C=1e4,alpha_1=0.5,alpha_2=0.5,tau = None,eps=1e-5,\
-                 tol = 1e-3,max_iter = 100,tol_select_features = 1e-5):
-        
-
-        self._p = None
+    def __init__(self, p=0.5, C=1e4, alpha_1=0.5, alpha_2=0.5, tau=None,
+                 eps=1e-5, tol=1e-3, max_iter=100,
+                 tol_select_features=1e-5, random_state=None):
         self.p = p
-        self._C = None
         self.C = C
-        self._alpha_1 = None
         self.alpha_1 = alpha_1
-        self._alpha_2 = None 
         self.alpha_2 = alpha_2
-        self._tau = None
-        self.tau = tau   
-        self._eps = None
+        self.tau = tau
         self.eps = eps
-        self._tol = None
         self.tol = tol
-        self._max_iter = None
-        self.max_iter = max_iter              
-        self._tol_select_features = None
-        self.tol_select_features = tol_select_features           
-        
-
-
-    @property
-    def p(self):
-       return self._p
-
-    @property 
-    def C(self):
-       return self._C
-
-    @property 
-    def alpha_1(self):
-       return self._alpha_1
-
-    @property 
-    def alpha_2(self):
-       return self._alpha_2    
-
-    @property 
-    def tau(self):
-       return self._tau        
-    
-    @property
-    def eps(self):
-        return self._eps
-    
-    @property
-    def tol(self):
-        return self._tol
-
-    @property
-    def max_iter(self):
-        return self._max_iter      
-
-    @property
-    def tol_select_features(self):
-        return self._tol_select_features        
-    
-
-    @p.setter
-    def p(self,value):
-        if not isinstance(value, float) and not isinstance(value,int):
-            raise TypeError("p must be a float number.")
-        elif (value<=0) or (value>=1):
-            raise ValueError("p must be a real number between 0 and 1")
-        else:
-            self._p = value
-
-    @C.setter
-    def C(self,value):
-        if not isinstance(value, float) and not isinstance(value,int):
-            raise TypeError("C must be a float number.")
-        elif (value<=0):
-            raise ValueError("C must be a positive number")
-        else:
-            self._C = value
-
-    @alpha_1.setter
-    def alpha_1(self,value):
-        if not isinstance(value, float) and not isinstance(value,int):
-            raise TypeError("alpha_1 must be a float number.")
-        elif (value<=0) or (value>=1):
-            raise ValueError("alpha_1 must be a real number between 0 and 1")
-        else:
-            self._alpha_1 = value
-
-    @alpha_2.setter
-    def alpha_2(self,value):
-        if not isinstance(value, float) and not isinstance(value,int):
-            raise TypeError("alpha_2 must be a float number.")
-        elif (value<=0) or (value>=1):
-            raise ValueError("alpha_2 must be a real number between 0 and 1")
-        else:
-            self._alpha_2 = value  
-
-    @tau.setter
-    def tau(self,value):
-        if value:
-           if not isinstance(value, float) and not isinstance(value,int):
-             raise TypeError("tau must be a float number or be equal to None.")
-           elif (value<=0):
-             raise ValueError("tau must be >0 and <=1")
-           else:
-             self._tau = value  
-        else:
-            self._tau = None               
-
-    @eps.setter
-    def eps(self,value):
-        if not isinstance(value, float) and not isinstance(value,int):
-            raise TypeError("eps must be a float number or an integer number.")
-        elif (value<=0):
-            raise ValueError("eps must be a positive number")
-        else:
-            self._eps = value  
-
-
-    @tol.setter
-    def tol(self,value):
-        if not isinstance(value, float) and not isinstance(value,int):
-            raise TypeError("tol must be a float number or an integer number.")
-        elif (value<=0):
-            raise ValueError("tol must be a positive number")
-        else:
-            self._tol = value              
-
-    @max_iter.setter
-    def max_iter(self,value):
-        if not isinstance(value,int):
-            raise TypeError("max_iter must be an integer number.")
-        elif (value<=0):
-            raise ValueError("max_iter must be positive")
-        else:
-            self._max_iter = value               
-            
-    @tol_select_features.setter
-    def tol_select_features(self,value):
-        if not isinstance(value, float) and not isinstance(value,int):
-            raise TypeError("tol_select_features must be a float number or an integer number.")
-        elif (value<=0):
-            raise ValueError("tol_select_features must be a positive number")
-        else:
-            self._tol_select_features = value 
-            if hasattr(self,"coef_"):
-
-                mask_selected_features = np.abs(self.coef_) > self.tol_select_features
-                self.n_selected_features_ = int(mask_selected_features.sum())
-
-                if hasattr(self,"feature_names_in_"):
-                   self.selected_feature_names_ = self.feature_names_in_[mask_selected_features]                  
+        self.max_iter = max_iter
+        self.tol_select_features = tol_select_features
+        self.random_state = random_state                
             
     def __sklearn_tags__(self):                       # ← 4 espacios de indentación
         tags = super().__sklearn_tags__()             # ← 8 espacios
@@ -314,6 +190,9 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
         self : object
         Fitted estimator.
         """        
+
+        self._validate_params()
+        rng = check_random_state(self.random_state)
         kappa1 = np.sqrt(self.alpha_1 / (1-self.alpha_1))
         kappa2 = np.sqrt(self.alpha_2 / (1-self.alpha_2))
 
@@ -355,7 +234,7 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
         S2 = (1 / np.sqrt(m_neg)) * (A_neg.T - mu2 @ np.ones((1,m_neg)))
         
         
-        w_old = np.random.randn(n)
+        w_old = rng.randn(n)
 
         phi_k_abs = np.ones(n)
         err = 2 * self.tol
