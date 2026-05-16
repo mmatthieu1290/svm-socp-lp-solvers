@@ -159,8 +159,7 @@ class SOCPLp(BaseEstimator, ClassifierMixin):
         self._tol_select_features = None
         self.tol_select_features = tol_select_features           
         
-#        self.kappa1 = np.sqrt(alpha_1 / (1-alpha_1))
-#        self.kappa2 = np.sqrt(alpha_2 / (1-alpha_2))
+
 
     @property
     def p(self):
@@ -225,7 +224,6 @@ class SOCPLp(BaseEstimator, ClassifierMixin):
             raise ValueError("alpha_1 must be a real number between 0 and 1")
         else:
             self._alpha_1 = value
-            self.kappa1 = np.sqrt(value / (1-value))
 
     @alpha_2.setter
     def alpha_2(self,value):
@@ -235,7 +233,6 @@ class SOCPLp(BaseEstimator, ClassifierMixin):
             raise ValueError("alpha_2 must be a real number between 0 and 1")
         else:
             self._alpha_2 = value  
-            self.kappa2 = np.sqrt(value / (1-value))
 
     @tau.setter
     def tau(self,value):
@@ -312,7 +309,8 @@ class SOCPLp(BaseEstimator, ClassifierMixin):
         self : object
         Fitted estimator.
         """        
-
+        self.kappa1 = np.sqrt(self.alpha_1 / (1-self.alpha_1))
+        self.kappa2 = np.sqrt(self.alpha_2 / (1-self.alpha_2))
         y = y.copy()
         X = X.copy()
 
@@ -342,9 +340,9 @@ class SOCPLp(BaseEstimator, ClassifierMixin):
             
         if (len(np.unique(y)) != 2):
             raise ValueError("The target must be a binary variable.")
-
-        if (set(np.unique(y)) != {0,1}) & (set(np.unique(y)) != {-1,1}):
-            raise ValueError("The target must contain only -1 and 1 or 0 and 1.")
+        unique_y = set(np.unique(y).tolist())
+        if unique_y not in ({0.0, 1.0}, {-1.0, 1.0}):
+           raise ValueError("The target must contain only -1 and 1 or 0 and 1.")
             
         self.classes_ = np.unique(y)
         y[y<=0] = -1
