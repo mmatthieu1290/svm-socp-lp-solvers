@@ -290,7 +290,11 @@ class SOCPLp(BaseEstimator, ClassifierMixin):
                 if hasattr(self,"feature_names_in_"):
                    self.selected_feature_names_ = self.feature_names_in_[mask_selected_features]                  
             
-        
+    def __sklearn_tags__(self):                       # ← 4 espacios de indentación
+        tags = super().__sklearn_tags__()             # ← 8 espacios
+        tags.classifier_tags.multi_class = False      # ← 8 espacios
+        return tags  
+          
     def fit(self,X,y):
 
         """
