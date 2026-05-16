@@ -4,8 +4,8 @@ import cvxpy as cp
 from sklearn.exceptions import NotFittedError
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.multiclass import check_classification_targets
-from sklearn.utils.validation import check_array
-from .utils import prediction_from_w_b,prediction_probas_from_w_b
+from sklearn.utils.validation import check_array, check_is_fitted
+
 
 class SOCPLp(ClassifierMixin,BaseEstimator):
 
@@ -424,17 +424,14 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
         Predicted labels in the same encoding as `classes_`.
        """         
 
-       X = X.copy() 
-        
-       if hasattr(self,"coef_") == False:
-          error_msg =  "This instance of Lp_SVM instance is not fitted yet. "
-          error_msg +=  "Call 'fit' with appropriate arguments before using this estimator."
-          raise NotFittedError(error_msg)
-
-       predictions =  prediction_from_w_b(self.coef_,self.intercept_,\
-                                          X,threshold,self.negative_value)    
-    
-       return predictions
+       check_is_fitted(self)
+       X = check_array(X)
+       if X.shape[1] != len(self.coef_):
+          raise ValueError(
+            f"X has {X.shape[1]} features, but model was fitted with {len(self.coef_)}."
+        )
+       scores = X @ self.coef_ + self.intercept_
+       return np.where(scores >= 0, self.classes_[1], self.classes_[0])
     
     def predict_proba(self,X):
        
@@ -452,13 +449,8 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
         negative or zero class, the second column is the probability for each observation to belong to positive class.
        """    
 
-       X = X.copy() 
-
-       if hasattr(self,"coef_")== False:
-          error_msg =  "This instance of Lp_SVM instance is not fitted yet. "
-          error_msg +=  "Call 'fit' with appropriate arguments before using this estimator."
-          raise NotFittedError(error_msg) 
-       
-       probas = prediction_probas_from_w_b(w=self.coef_,b=self.intercept_,X=X)
-    
-       return probas   
+       check_is_fitted(self)
+       X = check_array(X)
+       scores = X @ self.coef_ + self.intercept_
+       p_pos = 1.0 / (1.0 + np.exp(-scores))
+       return np.column_stack([1.0 - p_pos, p_pos])
