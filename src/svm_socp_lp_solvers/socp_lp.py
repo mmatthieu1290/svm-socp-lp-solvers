@@ -3,6 +3,7 @@ import numpy.linalg as npl
 import cvxpy as cp
 from sklearn.exceptions import NotFittedError
 from sklearn.base import BaseEstimator, ClassifierMixin
+from sklearn.utils.multiclass import check_classification_targets
 from sklearn.utils.validation import check_array
 from .utils import prediction_from_w_b,prediction_probas_from_w_b
 
@@ -315,48 +316,34 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
         """        
         self.kappa1 = np.sqrt(self.alpha_1 / (1-self.alpha_1))
         self.kappa2 = np.sqrt(self.alpha_2 / (1-self.alpha_2))
+
         y = y.copy()
         X = X.copy()
+        X = check_array(X, ensure_all_finite=True)
+        y = np.asarray(y)
 
-        if hasattr(X,"columns"):
-            self.feature_names_in_  = X.columns.tolist()
+        if hasattr(X, "columns"):
+           self.feature_names_in_ = np.asarray(X.columns.tolist())
 
-        
-        X = check_array(X,ensure_all_finite=True)
-
-        _ =  check_array(y,ensure_all_finite=True,ensure_2d=False)
-        if isinstance(y,np.ndarray) == False:
-            y = np.array(y)
-            
-        y = y.astype(float)
-        
-        self.negative_value = y.min()  
-        
-        
-        if y.ndim == 2:
-            if y.shape[1] > 1:
-                raise ValueError("y's number of columns must be equal to one")
-
-        
-        y = y.reshape((-1,1))
-        if X.shape[0] != y.shape[0]:
-            raise ValueError("The dimensions of X and y are not consistent")
-            
-        if (len(np.unique(y)) != 2):
-            raise ValueError("The target must be a binary variable.")
-        unique_y = set(np.unique(y).tolist())
-        if unique_y not in ({0.0, 1.0}, {-1.0, 1.0}):
-           raise ValueError("The target must contain only -1 and 1 or 0 and 1.")
-            
+        # Validación estándar sklearn
+        check_classification_targets(y)
         self.classes_ = np.unique(y)
-        y[y<=0] = -1
+
+        if len(self.classes_) != 2:
+           raise ValueError(
+            f"This estimator only supports binary classification. "
+            f"Got {len(self.classes_)} classes: {self.classes_}"
+        )
+
+        # Mapeo interno a {-1, +1}: classes_[0] -> -1, classes_[1] -> +1
+        y_internal = np.where(y == self.classes_[1], 1.0, -1.0)
 
         n = X.shape[1]
 
         self.n_features_in_ = n
         
-        A_pos = X[(y==1).reshape((-1,))]
-        A_neg = X[(y<=0).reshape((-1,))]
+        A_pos = X[(y_internal==1).reshape((-1,))]
+        A_neg = X[(y_internal<=0).reshape((-1,))]
         
         m_pos = A_pos.shape[0]
         m_neg = A_neg.shape[0]
