@@ -8,6 +8,7 @@ from numbers import Real, Integral
 from sklearn.utils._param_validation import Interval
 from sklearn.utils import check_random_state
 from sklearn.utils.validation import check_is_fitted
+from sklearn.utils.validation import validate_data
 
 
 class SOCPLp(ClassifierMixin,BaseEstimator):
@@ -196,13 +197,7 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
         kappa1 = np.sqrt(self.alpha_1 / (1-self.alpha_1))
         kappa2 = np.sqrt(self.alpha_2 / (1-self.alpha_2))
 
-        y = y.copy()
-        X = X.copy()
-        X = check_array(X, ensure_all_finite=True)
-        y = np.asarray(y)
-
-        if hasattr(X, "columns"):
-           self.feature_names_in_ = np.asarray(X.columns.tolist())
+        X, y = validate_data(self, X, y, ensure_all_finite=True, y_numeric=False)
 
         # Validación estándar sklearn
         check_classification_targets(y)
@@ -218,8 +213,6 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
         y_internal = np.where(y == self.classes_[1], 1.0, -1.0)
 
         n = X.shape[1]
-
-        self.n_features_in_ = n
         
         A_pos = X[(y_internal==1).reshape((-1,))]
         A_neg = X[(y_internal<=0).reshape((-1,))]
@@ -307,9 +300,7 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
        check_is_fitted(self)
        X = check_array(X)
        if X.shape[1] != len(self.coef_):
-          raise ValueError(
-            f"X has {X.shape[1]} features, but model was fitted with {len(self.coef_)}."
-        )
+          raise ValueError(...)
        scores = X @ self.coef_ + self.intercept_
        return np.where(scores >= 0, self.classes_[1], self.classes_[0])
     
@@ -330,7 +321,6 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
        """    
 
        check_is_fitted(self)
-       X = check_array(X)
+       X = validate_data(self, X, reset=False)
        scores = X @ self.coef_ + self.intercept_
-       p_pos = 1.0 / (1.0 + np.exp(-scores))
-       return np.column_stack([1.0 - p_pos, p_pos])
+       return np.where(scores >= 0, self.classes_[1], self.classes_[0])
