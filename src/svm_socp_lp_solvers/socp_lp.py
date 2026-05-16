@@ -314,8 +314,8 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
         self : object
         Fitted estimator.
         """        
-        self.kappa1 = np.sqrt(self.alpha_1 / (1-self.alpha_1))
-        self.kappa2 = np.sqrt(self.alpha_2 / (1-self.alpha_2))
+        kappa1 = np.sqrt(self.alpha_1 / (1-self.alpha_1))
+        kappa2 = np.sqrt(self.alpha_2 / (1-self.alpha_2))
 
         y = y.copy()
         X = X.copy()
@@ -366,9 +366,9 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
         
         xi = cp.Variable(2,nonneg=True)
         #   w^T μ1 + b ≥ 1 − xi_1 + κ1 ||S1^T w||
-        constr1 = self.kappa1 * cp.norm(S1.T @ w, 2) <= w @ mu1 + b - 1 + xi[0]
+        constr1 = kappa1 * cp.norm(S1.T @ w, 2) <= w @ mu1 + b - 1 + xi[0]
         # −(w^T μ2 + b) ≥ 1 − xi_2 + κ2 ||S2^T w||
-        constr2 = self.kappa2 * cp.norm(S2.T @ w, 2) <= -(w @ mu2 + b) - 1 + xi[1]
+        constr2 = kappa2 * cp.norm(S2.T @ w, 2) <= -(w @ mu2 + b) - 1 + xi[1]
         if self.tau:
            constr3 = w @ mu1 + b <= 1 + xi[0]/self.tau
            constr4 = -self.tau *(w @ mu2 + b) <= self.tau+xi[1]
@@ -397,7 +397,7 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
             
         self.coef_ = w_old
         self.intercept_ = b_old
-        self.xi = xi_old 
+        self.xi_ = xi_old 
         self.n_iter_ = iter_
         self.n_non_zeros_coef_per_iteration_ = np.array(self.n_non_zeros_coef_per_iteration_)		
 
