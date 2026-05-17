@@ -300,7 +300,7 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
        check_is_fitted(self)
        X = check_array(X)
        if X.shape[1] != len(self.coef_):
-          raise ValueError(...)
+          raise ValueError(f"X has {X.shape[1]} features, but model was fitted with {len(self.coef_)}.")
        scores = X @ self.coef_ + self.intercept_
        return np.where(scores >= 0, self.classes_[1], self.classes_[0])
     
