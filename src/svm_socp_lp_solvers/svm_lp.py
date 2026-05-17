@@ -211,7 +211,7 @@ class SVMLp(ClassifierMixin,BaseEstimator):
         xi =  cp.Variable(m,nonneg=True)
         constraints = [] 
         for row, target,xi_i in zip(X,y_internal,xi):
-            constr = target @ (w @ row.reshape((-1,1)) + b) >=  1 - xi_i
+            constr = target * (w @ row.reshape((-1,1)) + b) >=  1 - xi_i
             constraints.append(constr) 
 
 
