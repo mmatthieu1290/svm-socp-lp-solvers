@@ -130,7 +130,7 @@ class SVMLp(ClassifierMixin,BaseEstimator):
     """
     
 
-    def __init__(self,p=0.5,C=1e4,eps=1e-5,tol=1e-4,max_iter=100,tol_select_features = 1e-5):
+    def __init__(self,p=0.5,C=1e4,eps=1e-5,tol=1e-4,max_iter=100,tol_select_features = 1e-5,random_state=None):
 
         
 
