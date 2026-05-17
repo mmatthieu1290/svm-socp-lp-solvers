@@ -281,9 +281,7 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
         
         return self
 
-    
-    def predict(self,X,threshold = 0.5):    
-       
+    def predict(self, X):
        """
        Predict class labels for samples in X.
 
@@ -295,32 +293,35 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
        -------
        y_pred : ndarray of shape (n_samples,)
         Predicted labels in the same encoding as `classes_`.
-       """         
-
-       check_is_fitted(self)
-       X = check_array(X)
-       if X.shape[1] != len(self.coef_):
-          raise ValueError(f"X has {X.shape[1]} features, but model was fitted with {len(self.coef_)}.")
-       scores = X @ self.coef_ + self.intercept_
-       return np.where(scores >= 0, self.classes_[1], self.classes_[0])
-    
-    def predict_proba(self,X):
-       
        """
-       Predict probability for class labels for samples in X.
-
-       Parameters
-       ----------
-       X : array-like of shape (n_samples, n_features)
-
-       Returns
-       -------
-       y_pred_prob : ndarray of shape (n_samples,2)
-        The first column is the probability for each observation to belong to 
-        negative or zero class, the second column is the probability for each observation to belong to positive class.
-       """    
-
        check_is_fitted(self)
        X = validate_data(self, X, reset=False)
        scores = X @ self.coef_ + self.intercept_
        return np.where(scores >= 0, self.classes_[1], self.classes_[0])
+
+
+def predict_proba(self, X):
+    """
+    Predict pseudo-probabilities for class labels.
+
+    Parameters
+    ----------
+    X : array-like of shape (n_samples, n_features)
+
+    Returns
+    -------
+    y_pred_prob : ndarray of shape (n_samples, 2)
+        Column 0: pseudo-probability of `classes_[0]`.
+        Column 1: pseudo-probability of `classes_[1]`.
+
+    Notes
+    -----
+    These are not calibrated probabilities. They are obtained by applying a
+    logistic transform to the decision function. For calibrated probabilities,
+    wrap this estimator with `sklearn.calibration.CalibratedClassifierCV`.
+    """
+    check_is_fitted(self)
+    X = validate_data(self, X, reset=False)
+    scores = X @ self.coef_ + self.intercept_
+    p_pos = 1.0 / (1.0 + np.exp(-scores))
+    return np.column_stack([1.0 - p_pos, p_pos])
