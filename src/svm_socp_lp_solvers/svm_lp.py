@@ -175,10 +175,6 @@ class SVMLp(ClassifierMixin,BaseEstimator):
 
         X, y = validate_data(self, X, y, ensure_all_finite=True, y_numeric=False)
 
-        # Validación estándar sklearn
-        #check_classification_targets(y)
-        #self.classes_ = np.unique(y)
-
         y_type = type_of_target(y, input_name='y', raise_unknown=True)
         if y_type != 'binary':
            raise ValueError(
@@ -250,6 +246,8 @@ class SVMLp(ClassifierMixin,BaseEstimator):
 
         if hasattr(self,"feature_names_in_"):
             self.selected_feature_names_ = np.array(self.feature_names_in_)[mask_selected_features]
+
+        return self    
         
     def predict(self, X):
        """

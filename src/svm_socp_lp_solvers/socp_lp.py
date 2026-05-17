@@ -199,10 +199,6 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
 
         X, y = validate_data(self, X, y, ensure_all_finite=True, y_numeric=False)
 
-        # Validación estándar sklearn
-        #check_classification_targets(y)
-        #self.classes_ = np.unique(y)
-
         y_type = type_of_target(y, input_name='y', raise_unknown=True)
         if y_type != 'binary':
            raise ValueError(
