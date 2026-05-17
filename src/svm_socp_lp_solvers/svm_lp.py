@@ -6,8 +6,22 @@ from sklearn.exceptions import NotFittedError
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.validation import check_array
 from .utils import prediction_from_w_b,prediction_probas_from_w_b
+from sklearn.utils._param_validation import Interval
+from numbers import Real, Integral
+
 
 class SVMLp(BaseEstimator, ClassifierMixin):
+
+    _parameter_constraints = {
+        "p": [Interval(Real, 0, 1, closed="neither")],
+        "C": [Interval(Real, 0, None, closed="neither")],
+        "tau": [Interval(Real, 0, None, closed="neither"), None],
+        "eps": [Interval(Real, 0, None, closed="neither")],
+        "tol": [Interval(Real, 0, None, closed="neither")],
+        "max_iter": [Interval(Integral, 1, None, closed="left")],
+        "tol_select_features": [Interval(Real, 0, None, closed="neither")],
+        "random_state": ["random_state"],
+    }
 
     r"""
     Smoothed sparse Lp-SVM classifier.
@@ -135,102 +149,6 @@ class SVMLp(BaseEstimator, ClassifierMixin):
         self._tol_select_features = None
         self.tol_select_features = tol_select_features
 
-    
-
-    @property
-    def p(self):
-       return self._p
-
-    @property 
-    def C(self):
-       return self._C
-  
-    
-    @property
-    def eps(self):
-        return self._eps
-    
-
-    @property
-    def tol(self):
-        return self._tol
-
-
-
-    @property
-    def max_iter(self):
-        return self._max_iter        
-
-    @property
-    def tol_select_features(self):
-        return self._tol_select_features
-
-
-    @p.setter
-    def p(self,value):
-        if not isinstance(value, float) and not isinstance(value,int):
-            raise TypeError("p must be a float number.")
-        elif (value<=0) or (value>=1):
-            raise ValueError("p must be a real number between 0 and 1")
-        else:
-            self._p = value
-
-    @C.setter
-    def C(self,value):
-        if not isinstance(value, float) and not isinstance(value,int):
-            raise TypeError("C must be a float number.")
-        elif (value<=0):
-            raise ValueError("C must be a positive number")
-        else:
-            self._C = value
-
-    @eps.setter
-    def eps(self,value):
-        if not isinstance(value, float) and not isinstance(value,int):
-            raise TypeError("eps must be a float number.")
-        elif (value<=0):
-            raise ValueError("eps must be a positive number")
-        else:
-
-            self._eps = value  
-
-            self._eps = value
-
-
-    @tol.setter
-    def tol(self,value):
-        if not isinstance(value, float) and not isinstance(value,int):
-            raise TypeError("tol must be a float number or an integer number.")
-        elif (value<=0):
-            raise ValueError("tol must be a positive number")
-        else:
-            self._tol = value 
-
-    @max_iter.setter
-    def max_iter(self,value):
-        if not isinstance(value,int):
-            raise TypeError("max_iter must be a float number.")
-        elif (value<=0):
-            raise ValueError("max_iter must be a positive number")
-        else:
-            self._max_iter = value                            
-            
-        
-    @tol_select_features.setter
-    def tol_select_features(self,value):
-        if not isinstance(value, float) and not isinstance(value,int):
-            raise TypeError("tol_select_features must be a float number or an integer number.")
-        elif (value<=0):
-            raise ValueError("tol_select_features must be a positive number")
-        else:
-            self._tol_select_features = value 
-            if hasattr(self,"coef_"):
-
-                mask_selected_features = np.abs(self.coef_) > self.tol_select_features
-                self.n_selected_features_ = int(mask_selected_features.sum())
-
-                if hasattr(self,"feature_names_in_"):
-                   self.selected_feature_names_ = self.feature_names_in_[mask_selected_features]
                
 
     def fit(self,X,y):
