@@ -1,14 +1,15 @@
 import numpy as np
 import numpy.linalg as npl
 import cvxpy as cp
-from cvxpy.error import SolverError
 from sklearn.exceptions import NotFittedError
 from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.utils.validation import check_array
 from .utils import prediction_from_w_b,prediction_probas_from_w_b
 from sklearn.utils._param_validation import Interval
 from numbers import Real, Integral
 from sklearn.utils.multiclass import type_of_target
+from sklearn.utils import check_random_state
+from sklearn.utils.validation import check_is_fitted
+from sklearn.utils.validation import validate_data
 
 
 class SVMLp(BaseEstimator, ClassifierMixin):
@@ -170,8 +171,6 @@ class SVMLp(BaseEstimator, ClassifierMixin):
 
         self._validate_params()
         rng = check_random_state(self.random_state)
-        kappa1 = np.sqrt(self.alpha_1 / (1-self.alpha_1))
-        kappa2 = np.sqrt(self.alpha_2 / (1-self.alpha_2))
 
         X, y = validate_data(self, X, y, ensure_all_finite=True, y_numeric=False)
 
@@ -198,10 +197,8 @@ class SVMLp(BaseEstimator, ClassifierMixin):
 
         m = X.shape[0]
         n = X.shape[1]
-
-        self.n_features_in_ = n
         
-        w_old = np.random.randn(n)
+        w_old = rng.randn(n)
 
         phi_k = np.ones(n)
         err = 2 * self.tol
@@ -212,7 +209,7 @@ class SVMLp(BaseEstimator, ClassifierMixin):
            
         xi =  cp.Variable(m,nonneg=True)
         constraints = [] 
-        for row, target,xi_i in zip(X,y,xi):
+        for row, target,xi_i in zip(X,y_internal,xi):
             constr = target @ (w @ row.reshape((-1,1)) + b) >=  1 - xi_i
             constraints.append(constr) 
 
@@ -239,11 +236,10 @@ class SVMLp(BaseEstimator, ClassifierMixin):
             
         self.coef_ = w_old
         self.intercept_ = b_old
-        self.xi = xi_old 
+        self.xi_ = xi_old 
 
         self.n_iter_ = iter_ 
 
-        self.n_iter_ = iter_
         self.n_non_zeros_coefs_per_iteration_ = np.array(self.n_non_zeros_coefs_per_iteration_)
 
 
@@ -254,37 +250,28 @@ class SVMLp(BaseEstimator, ClassifierMixin):
         if hasattr(self,"feature_names_in_"):
             self.selected_feature_names_ = np.array(self.feature_names_in_)[mask_selected_features]
         
-    def predict(self,X,threshold = 0.5): 
-
+    def predict(self, X):
        """
-    Predict class labels for samples in X.
+       Predict class labels for samples in X.
 
-    Parameters
-    ----------
-    X : array-like of shape (n_samples, n_features)
+       Parameters
+       ----------
+       X : array-like of shape (n_samples, n_features)
 
-    Returns
-    -------
-    y_pred : ndarray of shape (n_samples,)
+       Returns
+       -------
+       y_pred : ndarray of shape (n_samples,)
         Predicted labels in the same encoding as `classes_`.
-       """          
-
-       X = X.copy() 
-        
-       if hasattr(self,"coef_")== False:
-          error_msg =  "This instance of Lp_SVM instance is not fitted yet. "
-          error_msg +=  "Call 'fit' with appropriate arguments before using this estimator."
-          raise NotFittedError(error_msg)
-
-       predictions =  prediction_from_w_b(self.coef_,self.intercept_,\
-                                          X,threshold,self.negative_value)    
-    
-       return predictions
-    
-    def predict_proba(self,X):
-       
        """
-    Predict probabilities for samples in X to belong to positive class.
+       check_is_fitted(self)
+       X = validate_data(self, X, reset=False)
+       scores = X @ self.coef_ + self.intercept_
+       return np.where(scores >= 0, self.classes_[1], self.classes_[0])
+
+
+def predict_proba(self, X):
+    """
+    Predict pseudo-probabilities for class labels.
 
     Parameters
     ----------
@@ -292,16 +279,18 @@ class SVMLp(BaseEstimator, ClassifierMixin):
 
     Returns
     -------
-    y_proba : ndarray of shape (n_samples,2)
-        Predicted probabilites in the same encoding as `classes_`.
-       """  
-       X = X.copy() 
+    y_pred_prob : ndarray of shape (n_samples, 2)
+        Column 0: pseudo-probability of `classes_[0]`.
+        Column 1: pseudo-probability of `classes_[1]`.
 
-       if hasattr(self,"coef_")== False:
-          error_msg =  "This instance of Lp_SVM instance is not fitted yet. "
-          error_msg +=  "Call 'fit' with appropriate arguments before using this estimator."
-          raise NotFittedError(error_msg) 
-       
-       probas = prediction_probas_from_w_b(w=self.coef_,b=self.intercept_,X=X)
-    
-       return probas   
+    Notes
+    -----
+    These are not calibrated probabilities. They are obtained by applying a
+    logistic transform to the decision function. For calibrated probabilities,
+    wrap this estimator with `sklearn.calibration.CalibratedClassifierCV`.
+    """
+    check_is_fitted(self)
+    X = validate_data(self, X, reset=False)
+    scores = X @ self.coef_ + self.intercept_
+    p_pos = 1.0 / (1.0 + np.exp(-scores))
+    return np.column_stack([1.0 - p_pos, p_pos])
