@@ -2,8 +2,7 @@ import numpy as np
 import numpy.linalg as npl
 import cvxpy as cp
 from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.utils.multiclass import check_classification_targets
-from sklearn.utils.validation import check_array, check_is_fitted
+from sklearn.utils.validation import  check_is_fitted
 from numbers import Real, Integral
 from sklearn.utils._param_validation import Interval
 from sklearn.utils import check_random_state

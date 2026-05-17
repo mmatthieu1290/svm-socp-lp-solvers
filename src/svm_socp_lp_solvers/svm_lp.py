@@ -8,6 +8,7 @@ from sklearn.utils.validation import check_array
 from .utils import prediction_from_w_b,prediction_probas_from_w_b
 from sklearn.utils._param_validation import Interval
 from numbers import Real, Integral
+from sklearn.utils.multiclass import type_of_target
 
 
 class SVMLp(BaseEstimator, ClassifierMixin):
@@ -131,25 +132,21 @@ class SVMLp(BaseEstimator, ClassifierMixin):
     def __init__(self,p=0.5,C=1e4,eps=1e-5,tol=1e-4,max_iter=100,tol_select_features = 1e-5):
 
         
-        self._p = None
+
         self.p = p
-        self._C = None
         self.C = C 
-        self._eps = None
         self.eps = eps 
-        self._tol = None
         self.tol = tol
-        self._max_iter = None
         self.max_iter = max_iter
         self.eps = eps
-        self._tol = None
         self.tol = tol
-        self._max_iter = None
         self.max_iter = max_iter      
-        self._tol_select_features = None
         self.tol_select_features = tol_select_features
 
-               
+    def __sklearn_tags__(self):                       # ← 4 espacios de indentación
+        tags = super().__sklearn_tags__()             # ← 8 espacios
+        tags.classifier_tags.multi_class = False      # ← 8 espacios
+        return tags                 
 
     def fit(self,X,y):
 
@@ -171,40 +168,33 @@ class SVMLp(BaseEstimator, ClassifierMixin):
         Fitted estimator.
         """
 
-        y = y.copy()
-        X = X.copy()
+        self._validate_params()
+        rng = check_random_state(self.random_state)
+        kappa1 = np.sqrt(self.alpha_1 / (1-self.alpha_1))
+        kappa2 = np.sqrt(self.alpha_2 / (1-self.alpha_2))
 
-        if hasattr(X,"columns"):
-            self.feature_names_in_ = X.columns.tolist()
-        
-        X = check_array(X,ensure_all_finite=True)
+        X, y = validate_data(self, X, y, ensure_all_finite=True, y_numeric=False)
 
-        _ =  check_array(y,ensure_all_finite=True,ensure_2d=False)
-        if isinstance(y,np.ndarray) == False:
-            y = np.array(y)
-            
-        y = y.astype(float)
-        
-        self.negative_value = y.min()  
-        
-        
-        if y.ndim == 2:
-            if y.shape[1] > 1:
-                raise ValueError("y's number of columns must be equal to one")
+        # Validación estándar sklearn
+        #check_classification_targets(y)
+        #self.classes_ = np.unique(y)
 
+        y_type = type_of_target(y, input_name='y', raise_unknown=True)
+        if y_type != 'binary':
+           raise ValueError(
+           f"Only binary classification is supported. The type of the target "
+           f"is {y_type}."
+    )
+        self.classes_ = np.unique(y) 
+        if len(self.classes_) < 2:
+            raise ValueError(
+            f"Classifier can't train when only one class is present. "
+            f"Got class: {self.classes_}"
+        )
         
-        y = y.reshape((-1,1))
-        if X.shape[0] != y.shape[0]:
-            raise ValueError("The dimensions of X and y are not consistent")
-            
-        if (len(np.unique(y)) != 2):
-            raise ValueError("The target must be a binary variable.")
 
-        if (set(np.unique(y)) != {0,1}) & (set(np.unique(y)) != {-1,1}):
-            raise ValueError("The target must contain only -1 and 1 or 0 and 1.")
-            
-        self.classes_ = np.unique(y)
-        y[y<=0] = -1
+        # Mapeo interno a {-1, +1}: classes_[0] -> -1, classes_[1] -> +1
+        y_internal = np.where(y == self.classes_[1], 1.0, -1.0)
 
         m = X.shape[0]
         n = X.shape[1]
