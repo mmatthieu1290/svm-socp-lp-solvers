@@ -9,6 +9,7 @@ from sklearn.utils._param_validation import Interval
 from sklearn.utils import check_random_state
 from sklearn.utils.validation import check_is_fitted
 from sklearn.utils.validation import validate_data
+from sklearn.utils.multiclass import type_of_target
 
 
 class SOCPLp(ClassifierMixin,BaseEstimator):
@@ -203,11 +204,14 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
         check_classification_targets(y)
         self.classes_ = np.unique(y)
 
-        if len(self.classes_) != 2:
+        y_type = type_of_target(y, input_name='y', raise_unknown=True)
+        if y_type != 'binary':
            raise ValueError(
-            f"This estimator only supports binary classification. "
-            f"Got {len(self.classes_)} classes: {self.classes_}"
-        )
+           f"Only binary classification is supported. The type of the target "
+           f"is {y_type}."
+    )
+
+        self.classes_ = np.unique(y)
 
         # Mapeo interno a {-1, +1}: classes_[0] -> -1, classes_[1] -> +1
         y_internal = np.where(y == self.classes_[1], 1.0, -1.0)
