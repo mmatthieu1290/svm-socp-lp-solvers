@@ -219,7 +219,7 @@ class SVMLp(ClassifierMixin,BaseEstimator):
            obj = cp.Minimize(cp.norm2(weighted_abs)**2 + self.C * cp.sum(xi)) 
            # ========= Resolver =========
            prob = cp.Problem(obj, constraints)
-           prob.solve()   
+           prob.solve(solver=cp.ECOS)   
            err = npl.norm(w.value - w_old,np.inf) 
            w_old = w.value
            b_old = b.value
