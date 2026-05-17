@@ -12,7 +12,7 @@ from sklearn.utils.validation import check_is_fitted
 from sklearn.utils.validation import validate_data
 
 
-class SVMLp(BaseEstimator, ClassifierMixin):
+class SVMLp(ClassifierMixin,BaseEstimator):
 
     _parameter_constraints = {
         "p": [Interval(Real, 0, 1, closed="neither")],
