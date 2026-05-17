@@ -201,8 +201,8 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
         X, y = validate_data(self, X, y, ensure_all_finite=True, y_numeric=False)
 
         # Validación estándar sklearn
-        check_classification_targets(y)
-        self.classes_ = np.unique(y)
+        #check_classification_targets(y)
+        #self.classes_ = np.unique(y)
 
         y_type = type_of_target(y, input_name='y', raise_unknown=True)
         if y_type != 'binary':
@@ -210,8 +210,13 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
            f"Only binary classification is supported. The type of the target "
            f"is {y_type}."
     )
-
-        self.classes_ = np.unique(y)
+        self.classes_ = np.unique(y) 
+        if len(self.classes_) < 2:
+            raise ValueError(
+            f"Classifier can't train when only one class is present. "
+            f"Got class: {self.classes_}"
+        )
+        
 
         # Mapeo interno a {-1, +1}: classes_[0] -> -1, classes_[1] -> +1
         y_internal = np.where(y == self.classes_[1], 1.0, -1.0)
