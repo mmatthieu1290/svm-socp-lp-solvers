@@ -143,6 +143,7 @@ class SVMLp(ClassifierMixin,BaseEstimator):
         self.tol = tol
         self.max_iter = max_iter      
         self.tol_select_features = tol_select_features
+        self.random_state = random_state
 
     def __sklearn_tags__(self):                       # ← 4 espacios de indentación
         tags = super().__sklearn_tags__()             # ← 8 espacios
