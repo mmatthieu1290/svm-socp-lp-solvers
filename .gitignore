@@ -1,11 +1,32 @@
+# Python
 __pycache__/
-*.pyc
-.ipynb_checkpoints/
-.dist/
+*.py[cod]
+*$py.class
+*.so
+.Python
 build/
 dist/
 *.egg-info/
-.venv/
-venv/
-.env
+*.egg
+*.pyc
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Virtual envs
+venv/
+env/
+.venv/
+
+# Tests / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+

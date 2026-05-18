@@ -5,12 +5,55 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "svm-socp-lp-solvers"
 version = "0.1.0"
-dependencies = [
-  "numpy",
-  "scikit-learn",
-  "cvxpy",
-  "ecos"
+description = "Sparse Lp-regularized SVM and distributionally robust SOCP classifiers in Python"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Miguel Carrasco"},
+    {name = "Julio Lopez"},
+    {name = "Matthieu Marechal"},
 ]
+keywords = [
+    "machine-learning",
+    "svm",
+    "sparse-classification",
+    "convex-optimization",
+    "socp",
+    "feature-selection",
+    "robust-optimization",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+dependencies = [
+    "numpy>=1.24",
+    "scikit-learn>=1.6",
+    "cvxpy>=1.4",
+    "ecos>=2.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0",
+    "pandas",
+    "openpyxl",
+]
+
+[project.urls]
+Homepage = "https://github.com/mmathieu1290/svm-socp-lp-solvers"
+Repository = "https://github.com/mmathieu1290/svm-socp-lp-solvers"
+Issues = "https://github.com/mmathieu1290/svm-socp-lp-solvers/issues"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

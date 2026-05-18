@@ -304,28 +304,28 @@ class SOCPLp(ClassifierMixin,BaseEstimator):
        return np.where(scores >= 0, self.classes_[1], self.classes_[0])
 
 
-def predict_proba(self, X):
-    """
-    Predict pseudo-probabilities for class labels.
+    def predict_proba(self, X):
+       """
+       Predict pseudo-probabilities for class labels.
 
-    Parameters
-    ----------
-    X : array-like of shape (n_samples, n_features)
+       Parameters
+       ----------
+       X : array-like of shape (n_samples, n_features)
 
-    Returns
-    -------
-    y_pred_prob : ndarray of shape (n_samples, 2)
+       Returns
+       -------
+       y_pred_prob : ndarray of shape (n_samples, 2)
         Column 0: pseudo-probability of `classes_[0]`.
         Column 1: pseudo-probability of `classes_[1]`.
 
-    Notes
-    -----
-    These are not calibrated probabilities. They are obtained by applying a
-    logistic transform to the decision function. For calibrated probabilities,
-    wrap this estimator with `sklearn.calibration.CalibratedClassifierCV`.
-    """
-    check_is_fitted(self)
-    X = validate_data(self, X, reset=False)
-    scores = X @ self.coef_ + self.intercept_
-    p_pos = 1.0 / (1.0 + np.exp(-scores))
-    return np.column_stack([1.0 - p_pos, p_pos])
+       Notes
+       -----
+       These are not calibrated probabilities. They are obtained by applying a
+       logistic transform to the decision function. For calibrated probabilities,
+       wrap this estimator with `sklearn.calibration.CalibratedClassifierCV`.
+       """
+       check_is_fitted(self)
+       X = validate_data(self, X, reset=False)
+       scores = X @ self.coef_ + self.intercept_
+       p_pos = 1.0 / (1.0 + np.exp(-scores))
+       return np.column_stack([1.0 - p_pos, p_pos])
