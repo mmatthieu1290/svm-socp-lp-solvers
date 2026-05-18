@@ -9,9 +9,9 @@
 <em>Sparse Lp-regularized SVM and distributionally robust SOCP classifiers in Python</em>
 
 <!-- BADGES -->
-<img src="https://img.shields.io/github/last-commit/mmatthieu1290/svm-socp-lp-solvers?style=flat&logo=git&logoColor=white&color=0080ff" alt="last-commit">
-<img src="https://img.shields.io/github/languages/top/mmatthieu1290/svm-socp-lp-solvers?style=flat&color=0080ff" alt="repo-top-language">
-<img src="https://img.shields.io/github/languages/count/mmatthieu1290/svm-socp-lp-solvers?style=flat&color=0080ff" alt="repo-language-count">
+[![tests](https://github.com/mmatthieu1290/svm-socp-lp-solvers/actions/workflows/tests.yml/badge.svg)](https://github.com/mmatthieu1290/svm-socp-lp-solvers/actions/workflows/tests.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.10%20|%203.11%20|%203.12-blue.svg)](https://www.python.org/)
 
 
 </div>
