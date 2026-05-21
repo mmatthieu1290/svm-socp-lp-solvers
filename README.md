@@ -1,36 +1,21 @@
-<div id="top">
+# svm-socp-lp-solvers
 
-<!-- HEADER STYLE: CLASSIC -->
-<div align="center">
+Sparse Lp-regularized SVM and distributionally robust SOCP classifiers in Python.
 
-
-# SVM-SOCP-LP-SOLVERS
-
-<em>Sparse Lp-regularized SVM and distributionally robust SOCP classifiers in Python</em>
-
-<!-- BADGES -->
 [![tests](https://github.com/mmatthieu1290/svm-socp-lp-solvers/actions/workflows/tests.yml/badge.svg)](https://github.com/mmatthieu1290/svm-socp-lp-solvers/actions/workflows/tests.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%20|%203.11%20|%203.12-blue.svg)](https://www.python.org/)
 
+## Overview
 
-</div>
-<br>
+`svm-socp-lp-solvers` implements two binary classifiers that produce **sparse coefficient vectors** while retaining competitive classification accuracy. Both rely on minimizing a non-convex Lp quasi-norm penalty (with `0 < p < 1`) via an Iteratively Reweighted L1 (IRL1) scheme:
 
----
+- **`SVMLp`** — sparse Lp-regularized Support Vector Machine.
+- **`SOCPLp`** — distributionally robust variant formulated as a Second-Order Cone Program with Chebyshev-based chance constraints, requiring only class-conditional means and covariances.
 
-## Table of Contents
+The API follows scikit-learn conventions (`fit`, `predict`, `predict_proba`, `coef_`, `intercept_`) and both estimators pass `sklearn.utils.estimator_checks.check_estimator`.
 
-- [Installation](#installation)
-- [Quick start](#quick-start)
-- [Features](#features)
-- [Scikit-learn compatibility](#scikit-learn-compatibility)
-- [API summary](#api-summary)
-- [Attributes (after `fit`)](#attributes-(after-`fit`))
-- [Examples](#examples)
-
-
----
+The method is described in Carrasco, Lopez & Marechal (2026), accepted for publication in *Pattern Recognition*.
 
 ## Installation
 
@@ -107,7 +92,7 @@ Both estimators share the following hyperparameters:
 | `alpha_2` | `0.5` | Same, for the negative class. |
 | `tau` | `None` | Optional. If set, activates two additional linear constraints on the decision function. |
 
-### Attributes (after `fit`)
+## Attributes after fit
 
 | Attribute | Description |
 |---|---|
@@ -146,7 +131,7 @@ for p in [0.9, 0.5, 0.1]:
     print(f"p={p}: {n_selected}/{X.shape[1]} features selected")
 ```
 
-### Use with `GridSearchCV`
+### Use with GridSearchCV
 
 ```python
 from sklearn.datasets import load_breast_cancer
@@ -221,7 +206,26 @@ Because $p < 1$, the objective is non-convex. It is minimized by a Majorization�
 
 For full details, see Carrasco, Lopez & Marechal (2026).
 
+## Citation
+
+If you use this package in your research, please cite:
+
+> Carrasco, M., Lopez, J., & Marechal, M. (2026). *Sparse Feature Selection via Lp-Quasi-Norm Second-Order Cone Programming*. Pattern Recognition. In press.
+
+BibTeX:
+
+```bibtex
+@article{carrasco2026sparse,
+  author  = {Carrasco, Miguel and Lopez, Julio and Marechal, Matthieu},
+  title   = {Sparse Feature Selection via {Lp}-Quasi-Norm Second-Order Cone Programming},
+  journal = {Pattern Recognition},
+  year    = {2026},
+  note    = {In press}
+}
+```
+
+This section will be updated once the DOI is assigned.
+
 ## License
 
 This project is released under the MIT License. See [LICENSE](LICENSE) for the full text.
-
