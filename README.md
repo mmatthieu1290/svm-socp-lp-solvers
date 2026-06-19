@@ -15,7 +15,7 @@ Sparse Lp-regularized SVM and distributionally robust SOCP classifiers in Python
 
 The API follows scikit-learn conventions (`fit`, `predict`, `predict_proba`, `coef_`, `intercept_`) and both estimators pass `sklearn.utils.estimator_checks.check_estimator`.
 
-The method is described in Carrasco, Lopez & Marechal (2026), accepted for publication in *Pattern Recognition*.
+The method is described in Carrasco, Lopez & Marechal (2026), "Sparse Feature Selection via Lp-Quasi-Norm Second-Order Cone Programming", *Pattern Recognition*. DOI: [10.1016/j.patcog.2026.114043](https://doi.org/10.1016/j.patcog.2026.114043).
 
 ## Installation
 
@@ -220,7 +220,7 @@ BibTeX:
   title   = {Sparse Feature Selection via {Lp}-Quasi-Norm Second-Order Cone Programming},
   journal = {Pattern Recognition},
   year    = {2026},
-  note    = {In press}
+  doi     = {10.1016/j.patcog.2026.114043}
 }
 ```
 
