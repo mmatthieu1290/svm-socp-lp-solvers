@@ -216,7 +216,7 @@ BibTeX:
 
 ```bibtex
 @article{carrasco2026sparse,
-  author  = {Carrasco, Miguel and Ibarra, Benjamin and Lopez, Julio and Marechal, Matthieu and Ramos, Angel M. Ramos},
+  author  = {Carrasco, Miguel and Ibarra, Benjamin and Lopez, Julio and Marechal, Matthieu and Ramos, Angel M.},
   title   = {Sparse Feature Selection via {Lp}-Quasi-Norm Second-Order Cone Programming},
   journal = {Pattern Recognition},
   year    = {2026},
