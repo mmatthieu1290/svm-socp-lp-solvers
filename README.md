@@ -41,7 +41,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 # Standardization is recommended — the SOCP constraints are scale-sensitive.
 pipe = Pipeline([
     ("scaler", StandardScaler()),
-    ("clf", SOCPLp(p=0.5, C=1.0, random_state=0)),
+    ("clf", SOCPLp(p=0.8,alpha_1=0.8,alpha_2=0.7, random_state=0)),
 ])
 pipe.fit(X_train, y_train)
 
