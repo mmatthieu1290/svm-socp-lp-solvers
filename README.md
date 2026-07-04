@@ -210,7 +210,7 @@ For full details, see Carrasco, Lopez & Marechal (2026).
 
 If you use this package in your research, please cite:
 
-> Carrasco, M., Ibarra, B, Lopez, J., Marechal, M., & Ramos, A.M. (2026). *Sparse Feature Selection via Lp-Quasi-Norm Second-Order Cone Programming*. Pattern Recognition, 114043.
+> Carrasco, M., Ibarra, B., Lopez, J., Marechal, M., & Ramos, A.M. (2026). *Sparse Feature Selection via Lp-Quasi-Norm Second-Order Cone Programming*. Pattern Recognition, 114043.
 
 BibTeX:
 
