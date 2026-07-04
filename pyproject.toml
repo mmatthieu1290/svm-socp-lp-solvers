@@ -11,8 +11,10 @@ requires-python = ">=3.10"
 license = {file = "LICENSE"}
 authors = [
     {name = "Miguel Carrasco"},
+    {name = "Benjamin Ibarra"},
     {name = "Julio Lopez"},
     {name = "Matthieu Marechal"},
+    {name = "Angel M. Ramos"},
 ]
 keywords = [
     "machine-learning",

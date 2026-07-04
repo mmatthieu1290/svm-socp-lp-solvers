@@ -15,7 +15,7 @@ Sparse Lp-regularized SVM and distributionally robust SOCP classifiers in Python
 
 The API follows scikit-learn conventions (`fit`, `predict`, `predict_proba`, `coef_`, `intercept_`) and both estimators pass `sklearn.utils.estimator_checks.check_estimator`.
 
-The method is described in Carrasco, M., Iborra, B., Lopez, J., Marechal, M., & Ramos, A.M. (2026), "Sparse Feature Selection via Lp-Quasi-Norm Second-Order Cone Programming", *Pattern Recognition 114043*. DOI: [10.1016/j.patcog.2026.114043](https://doi.org/10.1016/j.patcog.2026.114043).
+The method is described in Carrasco, M., Ibarra, B., Lopez, J., Marechal, M., & Ramos, A.M. (2026), "Sparse Feature Selection via Lp-Quasi-Norm Second-Order Cone Programming", *Pattern Recognition, 114043*. DOI: [10.1016/j.patcog.2026.114043](https://doi.org/10.1016/j.patcog.2026.114043).
 
 ## Installation
 
@@ -210,7 +210,7 @@ For full details, see Carrasco, Lopez & Marechal (2026).
 
 If you use this package in your research, please cite:
 
-> Carrasco, M., Ibarra, B, Lopez, J., Marechal, M., & Ramos, A.M. (2026). *Sparse Feature Selection via Lp-Quasi-Norm Second-Order Cone Programming*. Pattern Recognition 114043.
+> Carrasco, M., Ibarra, B, Lopez, J., Marechal, M., & Ramos, A.M. (2026). *Sparse Feature Selection via Lp-Quasi-Norm Second-Order Cone Programming*. Pattern Recognition, 114043.
 
 BibTeX:
 
@@ -219,6 +219,7 @@ BibTeX:
   author  = {Carrasco, Miguel and Ibarra, Benjamin and Lopez, Julio and Marechal, Matthieu and Ramos, Angel M.},
   title   = {Sparse Feature Selection via {Lp}-Quasi-Norm Second-Order Cone Programming},
   journal = {Pattern Recognition},
+  pages = {114043},
   year    = {2026},
   doi     = {10.1016/j.patcog.2026.114043}
 }
