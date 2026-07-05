@@ -20,7 +20,7 @@ The method is described in Carrasco, M., Ibarra, B., Lopez, J., Marechal, M., & 
 ## Installation
 
 ```bash
-pip install git+https://github.com/mmatthieu1290/svm-socp-lp-solvers.git
+pip install svm-socp-lp-solvers
 ```
 
 Requires Python ≥ 3.10. Dependencies (`numpy`, `scikit-learn` ≥ 1.6, `cvxpy`, `ecos`) are installed automatically.
