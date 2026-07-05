@@ -29,7 +29,7 @@ jobs:
     name: Publish to TestPyPI
     needs: build
     runs-on: ubuntu-latest
-    if: contains(github.ref, 'rc') || contains(github.ref, 'a') || contains(github.ref, 'b')
+    if: contains(github.ref_name, 'rc') || contains(github.ref_name, 'a') || contains(github.ref_name, 'b')
     environment:
       name: testpypi
       url: https://test.pypi.org/p/svm-socp-lp-solvers
@@ -50,7 +50,7 @@ jobs:
     name: Publish to PyPI
     needs: build
     runs-on: ubuntu-latest
-    if: "!contains(github.ref, 'rc') && !contains(github.ref, 'a') && !contains(github.ref, 'b')"
+    if: "!contains(github.ref_name, 'rc') && !contains(github.ref_name, 'a') && !contains(github.ref_name, 'b')"
     environment:
       name: pypi
       url: https://pypi.org/p/svm-socp-lp-solvers
