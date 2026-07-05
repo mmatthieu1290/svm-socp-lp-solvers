@@ -2,6 +2,8 @@
 
 Sparse Lp-regularized SVM and distributionally robust SOCP classifiers in Python.
 
+[![PyPI version](https://img.shields.io/pypi/v/svm-socp-lp-solvers.svg)](https://pypi.org/project/svm-socp-lp-solvers/)
+[![PyPI downloads](https://img.shields.io/pypi/dm/svm-socp-lp-solvers.svg)](https://pypi.org/project/svm-socp-lp-solvers/)
 [![tests](https://github.com/mmatthieu1290/svm-socp-lp-solvers/actions/workflows/tests.yml/badge.svg)](https://github.com/mmatthieu1290/svm-socp-lp-solvers/actions/workflows/tests.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%20|%203.11%20|%203.12-blue.svg)](https://www.python.org/)
