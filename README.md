@@ -174,7 +174,7 @@ $$
 y_i (w^\top x_i + b) \ge 1 - \xi_i, \quad \xi_i \ge 0,
 $$
 
-where $x_i \in \mathbb{R}^n$ is the feature vector of observation $i$ and $y_i \in \{-1, +1\}$ its label. The smoothing parameter $\varepsilon > 0$ makes the objective locally Lipschitz and avoids singularities at $w_j = 0$.
+where $x_i \in \mathbb{R}^n$ is the feature vector of observation $i$ and $y_i \pm 1$ its label. The smoothing parameter $\varepsilon > 0$ makes the objective locally Lipschitz and avoids singularities at $w_j = 0$.
 
 ### SOCPLp
 
@@ -188,8 +188,8 @@ subject to
 
 $$
 \begin{aligned}
-& w^\top \mu_1 + b \ge 1 - \xi_1 + \kappa(\alpha_1) \, \|S_1^\top w\|, \\
-& -(w^\top \mu_2 + b) \ge 1 - \xi_2 + \kappa(\alpha_2) \, \|S_2^\top w\|, \\
+& w^\top \mu_1 + b \ge 1 - \xi_1 + \kappa(\alpha_1)  \|S_1^\top w\|, \\
+& -(w^\top \mu_2 + b) \ge 1 - \xi_2 + \kappa(\alpha_2)  \|S_2^\top w\|, \\
 & \xi \ge 0,
 \end{aligned}
 $$
