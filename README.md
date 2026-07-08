@@ -174,7 +174,7 @@ $$
 y_i (w^\top x_i + b) \ge 1 - \xi_i, \quad \xi_i \ge 0,
 $$
 
-where $x_i \in \mathbb{R}^n$ is the feature vector of observation $i$ and $y_i \pm 1$ its label. The smoothing parameter $\varepsilon > 0$ makes the objective locally Lipschitz and avoids singularities at $w_j = 0$.
+where $x_i \in \mathbb{R}^n$ is the feature vector of observation $i$ and $y_i = \pm 1$ its label. The smoothing parameter $\varepsilon > 0$ makes the objective locally Lipschitz and avoids singularities at $w_j = 0$.
 
 ### SOCPLp
 
